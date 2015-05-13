@@ -24,17 +24,18 @@ def index():
 
     return render_template("homepage.html")
 
-@app.route('/register', methods=['GET'])
+
+@app.route('/registration', methods=['GET'])
 def register_form():
 
     return render_template("registration.html")
 
-@app.route('/register', methods=['POST'])
+
+@app.route('/registration', methods=['POST'])
 def register_process():
 
     email = request.form["email"]
     password = request.form["password"]
-    age = int(request.form["age"])
     zipcode = request.form["zipcode"]
 
     new_user = User(email=email, password=password, age=age, zipcode=zipcode)
@@ -45,8 +46,9 @@ def register_process():
     flash("User %s added." % email)
     return redirect("/")
 
-    @app.route('/profile', methods=['GET'])
-    def profile_form():
+
+@app.route('/profile', methods=['GET'])
+def profile_form():
 
         return render_template("profile_form.html")
 
@@ -67,10 +69,12 @@ def profile_process():
     flash("Profile submitted.")
     return redirect("/")
 
+
 @app.route('/login', methods=['GET'])
 def login_form():
 
     return render_template("login_form.html")
+
 
 @app.route('/login', methods=['POST'])
 def login_process():
@@ -93,6 +97,7 @@ def login_process():
     flash("You are logged in!")
     return redirect("/users/%s" % user.user_id)
 
+
 @app.route('/logout')
 def logout():
 
@@ -108,12 +113,14 @@ def logout():
 #     users = User.query.all()
 #     return render_template("user_list.html", users=users)
 
+
 @app.route("/users/<int:user_id>")
 def user_detail(user_id):
     """Show user profile."""
 
     user = User.query.get(user_id)
     return render_template("user.html", user=user)
+
 
 @app.route("/movies")
 def movie_list():
@@ -123,6 +130,7 @@ def movie_list():
 
 
     return render_template("movie_list.html", movies=movies)
+
 
 @app.route("/movies/<int:movie_id>", methods=['GET'])
 def movie_detail(movie_id):
@@ -148,72 +156,71 @@ def movie_detail(movie_id):
 
     # Prediction code: only predict if the user hasn't rated it.
 
-    if (not user_rating) and user_id:
-        user = User.query.get(user_id)
-        if user:
-            prediction = user.predict_rating(movie)
+    # if (not user_rating) and user_id:
+    #     user = User.query.get(user_id)
+    #     if user:
+    #         prediction = user.predict_rating(movie)
 
-    # Either use the prediction or their real rating
+    # # Either use the prediction or their real rating
 
-    if prediction:
-        # User hasn't scored; use our prediction if we made one
-        effective_rating = prediction
+    # if prediction:
+    #     # User hasn't scored; use our prediction if we made one
+    #     effective_rating = prediction
 
-    elif user_rating:
-        # User has already scored for real; use that
-        effective_rating = user_rating.score
+    # elif user_rating:
+    #     # User has already scored for real; use that
+    #     effective_rating = user_rating.score
 
-    else:
-        # User hasn't scored, and we couldn't get a prediction
-        effective_rating = None
+    # else:
+    #     # User hasn't scored, and we couldn't get a prediction
+    #     effective_rating = None
 
-    # Get the eye's rating, either by predicting or using real rating
+    # # Get the eye's rating, either by predicting or using real rating
 
-    the_eye = User.query.filter_by(email="the-eye@of-judgment.com").one()
-    eye_rating = Rating.query.filter_by(
-        user_id=the_eye.user_id, movie_id=movie.movie_id).first()
+    # the_eye = User.query.filter_by(email="the-eye@of-judgment.com").one()
+    # eye_rating = Rating.query.filter_by(
+    #     user_id=the_eye.user_id, movie_id=movie.movie_id).first()
 
-    if eye_rating is None:
-        eye_rating = the_eye.predict_rating(movie)
+    # if eye_rating is None:
+    #     eye_rating = the_eye.predict_rating(movie)
 
-    else:
-        eye_rating = eye_rating.score
+    # else:
+    #     eye_rating = eye_rating.score
 
-    if eye_rating and effective_rating:
-        difference = abs(eye_rating - effective_rating)
+    # if eye_rating and effective_rating:
+    #     difference = abs(eye_rating - effective_rating)
 
-    else:
-        # We couldn't get an eye rating, so we'll skip difference
-        difference = None
+    # else:
+    #     # We couldn't get an eye rating, so we'll skip difference
+    #     difference = None
 
-    # Depending on how different we are from the Eye, choose a message
+    # # Depending on how different we are from the Eye, choose a message
 
-    BERATEMENT_MESSAGES = [
-        "I suppose you don't have such bad taste after all.",
-        "I regret every decision that I've ever made that has brought me" +
-            " to listen to your opinion.",
-        "Words fail me, as your taste in movies has clearly failed you.",
-        "That movie is great. For a clown to watch. Idiot.",
-        "Words cannot express the awfulness of your taste."
-    ]
+    # BERATEMENT_MESSAGES = [
+    #     "I suppose you don't have such bad taste after all.",
+    #     "I regret every decision that I've ever made that has brought me" +
+    #         " to listen to your opinion.",
+    #     "Words fail me, as your taste in movies has clearly failed you.",
+    #     "That movie is great. For a clown to watch. Idiot.",
+    #     "Words cannot express the awfulness of your taste."
+    # ]
 
-    if difference is not None:
-        beratement = BERATEMENT_MESSAGES[int(difference)]
+    # if difference is not None:
+    #     beratement = BERATEMENT_MESSAGES[int(difference)]
 
-    else:
-        beratement = None
+    # else:
+    #     beratement = None
 
-    return render_template(
-        "movie.html",
-        movie=movie,
-        user_rating=user_rating,
-        average=avg_rating,
-        prediction=prediction,
-        eye_rating=eye_rating,
-        difference=difference,
-        beratement=beratement
-        )
-
+    # return render_template(
+    #     "movie.html",
+    #     movie=movie,
+    #     user_rating=user_rating,
+    #     average=avg_rating,
+    #     prediction=prediction,
+    #     eye_rating=eye_rating,
+    #     difference=difference,
+    #     beratement=beratement
+    #     )
 
 
 @app.route("/movies/<int:movie_id>", methods=['POST'])
