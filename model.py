@@ -2,7 +2,7 @@
 
 from flask_sqlalchemy import SQLAlchemy
 
-import correlation
+# import correlation
 
 # This is the connection to the SQLite database; we're getting this through
 # the Flask-SQLAlchemy helper library. On this, we can find the `session`
@@ -15,7 +15,7 @@ db = SQLAlchemy()
 # Model definitions
 
 class User(db.Model):
-    """User of application."""
+    """User of skin care product finder website."""
 
     __tablename__ = "users"
 
@@ -24,12 +24,13 @@ class User(db.Model):
     password = db.Column(db.String(64), nullable=True)
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
-    user_type = db.Column(db.Integer, db.ForeignKey('types.type_id'))
+    user_type_id = db.Column(db.Integer, db.ForeignKey('types.type_id'))
+
+    user_type = db.relationship('Type', backref=db.backref('users', order_by='user_id'))
 
     def __repr__(self):
         """provide helpful representation when printed"""
-        return "<User user_id=%s email=%s user_type=%s>" %
-        (self.user_id, self.email, self.user_type)
+        return "<User user_id=%s email=%s user_type=%s>" % (self.user_id, self.email, self.user_type)
 
 
 class Type(db.Model):
@@ -37,7 +38,7 @@ class Type(db.Model):
 
     __tablename__ = "types"
 
-    user_type = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    user_type_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     type_name = db.Column(db.String(64), nullable=True)
 
 
@@ -94,7 +95,10 @@ class Product_Category(db.Model):
 
     product_category_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     product_category_name = db.Column(db.String(64), nullable=True)
-    user_type = db.Column(db.Integer, db.ForeignKey('types.type_id'))
+    user_type_id = db.Column(db.Integer, db.ForeignKey('types.type_id'))
+
+    user_type = db.relationship('Type', backref=db.backref('product_categories', order_by='product_category_id'))
+
 
 
 class Product(db.Model):
@@ -105,18 +109,10 @@ class Product(db.Model):
     product_category_name = db.Column(db.String(64), nullable=True)
     price = db.Column(db.Integer)
     description = db.Column(db.String(1000), nullable=True)
-    image = db.Column(db.Blob, nullable=True)
+    # image = db.Column(db.Blob, nullable=True)
     product_category_id = db.Column(db.Integer, db.ForeignKey('product_categories.product_category_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    product_category = db.relationship('Product_Category', backref=db.backref('products', order_by=product_id))
 
-     # Define relationship to user
-    user = db.relationship('User', backref=db.backref('types', order_by=user_type)
-
-    # Define relationship to product category
-    product_category = db.relationship('Product_Category', backref=db.backref('types', order_by=user_type))
-
-    # Define relationship to product
-    product = db.relationship('Product', backref=db.backref('product_categories', order_by=product_categories_id))
 
 
 def __repr__(self):

@@ -1,12 +1,11 @@
-"""Movie Ratings."""
+"""Glow Petite"""
 
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-# //import os - not sure why this might be needed for log-in
 
-from model import User, Rating, Movie, connect_to_db, db
+from model import connect_to_db, db
 
 
 app = Flask(__name__)
@@ -23,12 +22,12 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return render_template('homepage.html')
+    return render_template("homepage.html")
 
 @app.route('/register', methods=['GET'])
 def register_form():
 
-    return render_template("register_form.html")
+    return render_template("registration.html")
 
 @app.route('/register', methods=['POST'])
 def register_process():
@@ -44,6 +43,28 @@ def register_process():
     db.session.commit()
 
     flash("User %s added." % email)
+    return redirect("/")
+
+    @app.route('/profile', methods=['GET'])
+    def profile_form():
+
+        return render_template("profile_form.html")
+
+
+@app.route('/profile', methods=['POST'])
+def profile_process():
+
+    skin_type = request.form["skin_type"]
+    skin_concern = request.form["skin_concern"]
+    age = int(request.form["age"])
+    environment = request.form["environment"]
+
+    new_profile = User(skin_type=skin_type, skin_concern=skin_concern, age=age, zipcode=zipcode)
+
+    db.session.add(new_profile)
+    db.session.commit()
+
+    flash("Profile submitted.")
     return redirect("/")
 
 @app.route('/login', methods=['GET'])
@@ -79,12 +100,13 @@ def logout():
     flash("You have logged out.")
     return redirect ("/")
 
-@app.route("/users")
-def user_list():
-    """Show list of users."""
+"""Route below is to page that shows list of users."""
+# @app.route("/users")
+# def user_list():
+#     """Show list of users."""
 
-    users = User.query.all()
-    return render_template("user_list.html", users=users)
+#     users = User.query.all()
+#     return render_template("user_list.html", users=users)
 
 @app.route("/users/<int:user_id>")
 def user_detail(user_id):
