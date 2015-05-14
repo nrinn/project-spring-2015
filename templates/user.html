@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>User Details</h1>
+
+   <ul>
+        <li>User ID: {{ user.user_id }}</li>
+        <li>User Type: {{ user.user_type_id }}</li>
+        <li>User Email: {{ user.email }}</li>
+        <li>Age: {{ user.age }}</li>
+        <li>Zipcode: {{ user.zipcode }}</li>
+    </ul>
+        {% if user.product_categories %}
+
+        <h2>Recommended Products Based on Your Profile</h2>
+        <ul>
+        {% for product_category in user.ratings %}
+            <li>
+                <a href="/movies/{{ rating.movie_id }}">{{ rating.movie.title }}</a>
+         was given the rating of: {{ rating.score }}
+            </li>
+    {% endfor %}
+        </ul>
+  {% endif %}
+
+{% endblock %}

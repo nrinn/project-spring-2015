@@ -1,0 +1,17 @@
+
+{% extends 'base.html' %}
+{% block content %}
+
+    <h2>Product Categories</h2><br>
+    <p>Separated by type:</p><br>
+    <ul>
+      {% for product_category in product)categories %}
+          <li>
+              <a href="/product_categories/{{ product_category.product_category_id }}">
+                {{ product_category.product }}
+              </a>
+          </li>
+      {% endfor %}
+    </ul>
+
+{% endblock %}
