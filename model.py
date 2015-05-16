@@ -24,22 +24,23 @@ class User(db.Model):
     password = db.Column(db.String(64), nullable=True)
     age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
-    user_type_id = db.Column(db.Integer, db.ForeignKey('types.user_type_id'))
+    specialty_id = db.Column(db.Integer, db.ForeignKey('specialties.specialty_id'))
 
-    user_type_id = db.relationship('Type', backref=db.backref('users', order_by='user_id'))
+    # Defines relationship to Specialty (formerly "Type")
+    specialty = db.relationship('Specialty', backref=db.backref('users', order_by='user_id'))
 
-    def __repr__(self):
-        """provide helpful representation when printed"""
-        return "<User user_id=%s email=%s user_type_id=%s>" % (self.user_id, self.email, self.user_type_id)
+    # def __repr__(self):
+    #     """provide helpful representation when printed"""
+    #     return "<User user_id=%s email=%s specialty_id=%s>" % (self.user_id, self.email, self.specialty_id)
 
 
-class Type(db.Model):
-    """User type - code received upon filling out profile."""
+class Specialty(db.Model):
+    """User specialty/type - code received upon filling out profile."""
 
-    __tablename__ = "types"
+    __tablename__ = "specialties"
 
-    user_type_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    type_name = db.Column(db.String(64), nullable=True)
+    specialty_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    specialty_name = db.Column(db.String(64), nullable=True)
 
 
 class Product_Category(db.Model):
@@ -49,9 +50,15 @@ class Product_Category(db.Model):
 
     product_category_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     product_category_name = db.Column(db.String(64), nullable=True)
-    user_type_id = db.Column(db.Integer, db.ForeignKey('types.user_type_id'))
+    specialty_id = db.Column(db.Integer, db.ForeignKey('specialties.specialty_id'))
 
-    types = db.relationship('Type', backref=db.backref('product_categories', order_by='product_category_id'))
+    specialty = db.relationship('Specialty', backref=db.backref('product_categories', order_by='product_category_id'))
+
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
+
+    # return "<Product_Category product_category_id=%s user_id=%s product_category_id=%s specialty_name=%s>" % (
+    #         self.specialty_id, self.user_id, self.product_category_id, self.specialty_name)
 
 
 class Product(db.Model):
@@ -59,19 +66,21 @@ class Product(db.Model):
 
     product_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     sku = db.Column(db.String(64), nullable=True)
-    product_category_name = db.Column(db.String(64), nullable=True)
+    product_name = db.Column(db.String(64), nullable=True)
     price = db.Column(db.Integer)
     description = db.Column(db.String(1000), nullable=True)
     # image = db.Column(db.Blob, nullable=True)
     product_category_id = db.Column(db.Integer, db.ForeignKey('product_categories.product_category_id'))
+
     product_category = db.relationship('Product_Category', backref=db.backref('products', order_by=product_id))
 
 
-def __repr__(self):
-        """Provide helpful representation when printed."""
+# def __repr__(self):
+#         """Provide helpful representation when printed."""
 
-        return "<Type user_type_id=%s user_id=%s product_category_id=%s type_name=%s>" % (
-            self.user_type_id, self.user_id, self.product_category_id, self.type_name)
+#     return "<Specialty specialty_id=%s user_id=%s product_category_id=%s specialty_name=%s>" % (
+#             self.specialty_id, self.user_id, self.product_category_id, self.specialty_name)
+
 
 
 ##############################################################################
