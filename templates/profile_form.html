@@ -3,71 +3,65 @@
 
 <h1>Profile Form</h1>
 
-<!-- <h2>Please provide your information below:</h2>
 <form action="profile" method="POST">
-    <label>Email Address:
-    <p>Enter your email address: <input type"email" name="email"></input></p>
-    </label>
-    <br>
-    <label>Password:
-    <p>Enter your password: <input type"password" name="password"></input></p>
-    </label>
-    <br>
-    <label>Age:
-    <p>Enter your age: <input type"number" name="age"></input></p>
-    </label>
-    <br>
-    <label>Zipcode:
-    <p>Enter your zipcode: <input type"text" name="zipcode"></input></p>
-    </label>
-    <br>
-    <p><input type="submit" value="Register"></p>
-</form> -->
 
- <form action="profile" method="POST">
-<!--         <label>Name a person. <input type="text" name="person"></label><br> -->
-         <label>Which best describes your skin? 
-            <select name="skin_type">
+    <div class="form-group">
+        <label>
+            Which of the following statements best describes your skin?<br>
+             <select name="skin_type" class="form-control">
                 <option value="Oily">My skin produces oil all over my face.</option>
                 <option value="Combination">My skin only produces oil in certain areas like my forehead, nose, and/or chin/jawline.</option>
                 <option value="Normal">My skin is neither very oily nor very dry.</option>
                 <option value="Dry">My skin is dry.</option>
                 <option value="Dehydrated">My skin is oily with very dry, flaky patches.</option>
-                <option value="Sensitive">My skin is prone to blemishes, and/or, redness.</option>
-            </select></label><br>
+                <option value="Sensitive">My skin is prone to blemishes and/or redness.</option>
+            </select>
+        </label>
+    </div>
 
-    <label>What is/are your main skin concerns. Select up to 3. </label><br>
-        <input type="checkbox" name="skin_concern" value="Acne" />Acne or Blemishes<br>
-        <input type="checkbox" name="skin_concern" value="Hyperpigmentation" />Acne or other types of Scars or Discoloration<br>
-        <input type="checkbox" name="skin_concern" value="Blackheads" />Blackheads or Clogged Pores<br> 
-        <input type="checkbox" name="skin_concern" value="Dryness" />Dryness<br>
-        <input type="checkbox" name="skin_concern" value="Oiliness" />Oiliness<br>
-        <input type="checkbox" name="skin_concern" value="Sensitivity" />Sensitivity<br> <input type="checkbox" name="skin_concern" value="Aging" />Aging<br>
-        <input type="checkbox" name="skin_concern" value="Sun" />Sun Damage<br>
-        <input type="checkbox" name="skin_concern" value="Redness" />Redness<br>
+    <div class="form-group">
+        <label>
+            What are your main skin concerns. Select up to 3.<br>
+            <input type="checkbox" name="skin_concern" value="Acne" /> Acne<br>
+            <input type="checkbox" name="skin_concern" value="Scars" /> Scars or Discoloration<br>
+            <input type="checkbox" name="skin_concern" value="Blackheads" /> Blackheads or Clogged Pores<br> 
+            <input type="checkbox" name="skin_concern" value="Dryness" /> Dryness<br>
+            <input type="checkbox" name="skin_concern" value="Oiliness" /> Oiliness<br>
+           <input type="checkbox" name="skin_concern" value="Sensitivity" /> Sensitivity<br>
+            <input type="checkbox" name="skin_concern" value="Aging" /> Aging<br>
+            <input type="checkbox" name="skin_concern" value="Sun" /> Sun Damage<br>
+            <input type="checkbox" name="skin_concern" value="Redness" /> Redness<br>
+        </label>
+    </div>
 
-        <label>What is your current age?</label><br>
-            <input value="under_18" name="age" type="radio">Under 18<br>
-            <input value="19-29" name="age" type="radio">19-29<br>
-            <input value="30-39" name="age" type="radio">30-39<br>
-            <input value="40-49" name="age" type="radio">40-49<br>
-            <input value="50-59" name="age" type="radio">50-59<br>
-            <input value="60+" name="age" type="radio">60+<br><br>
+    <div class="form-group">
+        <label>
+            What is your current age?<br>
+            <input value="under_18" name="age" type="radio"> Under 18<br>
+            <input value="19-29" name="age" type="radio"> 19-29<br>
+            <input value="30-39" name="age" type="radio"> 30-39<br>
+            <input value="40-49" name="age" type="radio"> 40-49<br>
+            <input value="50-59" name="age" type="radio"> 50-59<br>
+            <input value="60+" name="age" type="radio"> 60+<br>
+        </label>
+    </div>
 
-    <label>What is your environment like? Select all that apply. </label><br>
-        <input type="checkbox" name="environment" value="Urban" />Urban<br>
-        <input type="checkbox" name="environment" value="Suburban" />Suburban<br>
-        <input type="checkbox" name="environment" value="Rural" />Rural<br> 
-        <input type="checkbox" name="environment" value="Dry" />Dry<br>
-        <input type="checkbox" name="environment" value="Humid" />Humid<br>
-        <input type="checkbox" name="environment" value="Neither" />Neither Dry nor Humid<br>    
+    <div class="form-group">
+        <label>
+            What is your environment like? Select all that apply.<br>
+            <input type="checkbox" name="environment" value="Urban" />Urban<br>
+            <input type="checkbox" name="environment" value="Suburban" />Suburban<br>
+            <input type="checkbox" name="environment" value="Rural" />Rural<br> 
+            <input type="checkbox" name="environment" value="Dry" />Dry<br>
+            <input type="checkbox" name="environment" value="Humid" />Humid<br>
+            <input type="checkbox" name="environment" value="Neither" />Neither Dry nor Humid<br>    
+        </label>
+    </div>
 
-<!--         <label>Pick a color. <input type="text" name="color"></label><br>
-        <label>Pick a noun. <input type="text" name="noun"></label><br><br> -->
+    <div class="form-group">
+        <input type="submit" value="Submit Profile" class="btn btn-danger">
+    </div>
 
-        
-        <input type="submit" value="Profile">
-
-    </form>
+</form>
 
 {% endblock %}

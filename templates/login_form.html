@@ -1,11 +1,24 @@
 {% extends 'base.html' %}
 {% block content %}
 
+    <h1>Login</h1>
     <form action="/login" method="POST">
-    <label>Email</label><input type="email" name="email"></input><br>
-    <label>Password</label><input type="password" name="password"></input>
-    <br>
-    <p><input type="submit" value="Log In"></p>
-    </form>
 
+        <div class="form-group">
+            <label>Email:
+                <input type="email" name="email" required class="form-control">
+            </label>
+        </div>
+
+        <div class="form-group">
+            <label>Password:
+                <input type="password" name="password" required class="form-control">
+            </label>
+        </div>
+
+        <div class="form-group">
+            <input type="submit" value="Log In" class="btn btn-danger">
+        </div>
+
+    </form>
 {% endblock %}

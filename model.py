@@ -15,23 +15,26 @@ db = SQLAlchemy()
 # Model definitions
 
 class User(db.Model):
-    """User of skin care product finder website."""
+    """User of skincare website."""
 
     __tablename__ = "users"
 
     user_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     email = db.Column(db.String(64), nullable=True)
     password = db.Column(db.String(64), nullable=True)
-    age = db.Column(db.Integer, nullable=True)
+    firstname = db.Column(db.String(64), nullable=True)
+    lastname = db.Column(db.String(64), nullable=True)
+    # age = db.Column(db.Integer, nullable=True)
     zipcode = db.Column(db.String(15), nullable=True)
-    specialty_id = db.Column(db.Integer, db.ForeignKey('specialties.specialty_id'))
+    # specialty_id = db.Column(db.Integer, db.ForeignKey('specialties.specialty_id'))
 
-    # Defines relationship to Specialty (formerly "Type")
-    specialty = db.relationship('Specialty', backref=db.backref('users', order_by='user_id'))
+    # # Defines relationship to Specialty (formerly "Type")
+    # specialty = db.relationship("Specialty", backref=db.backref('users', order_by='user_id'))
 
-    # def __repr__(self):
-    #     """provide helpful representation when printed"""
-    #     return "<User user_id=%s email=%s specialty_id=%s>" % (self.user_id, self.email, self.specialty_id)
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<User user_id=%s email=%s>" % (self.user_id, self.email)
 
 
 class Specialty(db.Model):
@@ -41,6 +44,11 @@ class Specialty(db.Model):
 
     specialty_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     specialty_name = db.Column(db.String(64), nullable=True)
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Specialty specialty_id=%s specialty_name=%s>" % (self.specialty_id, self.specialty_name)
 
 
 class Product_Category(db.Model):
@@ -52,13 +60,14 @@ class Product_Category(db.Model):
     product_category_name = db.Column(db.String(64), nullable=True)
     specialty_id = db.Column(db.Integer, db.ForeignKey('specialties.specialty_id'))
 
-    specialty = db.relationship('Specialty', backref=db.backref('product_categories', order_by='product_category_id'))
+    # specialty = db.relationship('Specialty',
+    #                             backref=db.backref('product_categories', order_by='product_category_id'))
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""
 
-    # return "<Product_Category product_category_id=%s user_id=%s product_category_id=%s specialty_name=%s>" % (
-    #         self.specialty_id, self.user_id, self.product_category_id, self.specialty_name)
+    #     return "<Product_Category product_category_id=%s product_category_name=%s specialty_id=%s>" % (
+    #         self.product_category_id, self.product_category_name, self.specialty_id)
 
 
 class Product(db.Model):
@@ -72,15 +81,14 @@ class Product(db.Model):
     # image = db.Column(db.Blob, nullable=True)
     product_category_id = db.Column(db.Integer, db.ForeignKey('product_categories.product_category_id'))
 
-    product_category = db.relationship('Product_Category', backref=db.backref('products', order_by=product_id))
+    product_category = db.relationship('Product_Category',
+                                        backref=db.backref('products', order_by=product_id))
 
+    def __repr__(self):
+        """Provide helpful representation when printed."""
 
-# def __repr__(self):
-#         """Provide helpful representation when printed."""
-
-#     return "<Specialty specialty_id=%s user_id=%s product_category_id=%s specialty_name=%s>" % (
-#             self.specialty_id, self.user_id, self.product_category_id, self.specialty_name)
-
+        return "<Product product_id=%s sku=%s  product_name=%s price=%s description=%s product_category_id=%s>" % (
+            self.product_id, self.sku, self.product_name, self.price, self.description, self.product_category_id)
 
 
 ##############################################################################

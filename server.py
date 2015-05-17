@@ -5,7 +5,7 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import User, Specialty, Product_Category, Product, connect_to_db, db
+from model import connect_to_db, db, User, Specialty, Product_Category, Product
 
 
 app = Flask(__name__)
@@ -27,48 +27,30 @@ def index():
 
 @app.route('/register', methods=['GET'])
 def register_form():
+    """Show form for user signup."""
 
     return render_template("register_form.html")
 
 
 @app.route('/register', methods=['POST'])
 def register_process():
+    """Process registration."""
 
+    # Get form variables
     email = request.form["email"]
     password = request.form["password"]
-    age = int(request.form["age"])
+    firstname = request.form["firstname"]
+    lastname = request.form["lastname"]
+    # age = int(request.form["age"])
     zipcode = request.form["zipcode"]
 
-    new_user = User(email=email, password=password, age=age, zipcode=zipcode)
+    new_user = User(email=email, password=password, firstname=firstname, lastname=lastname, zipcode=zipcode)
 
     db.session.add(new_user)
     db.session.commit()
 
     flash("User %s added." % email)
-    return redirect("/")
-
-
-@app.route('/profile', methods=['GET'])
-def profile_form():
-
-        return render_template("profile_form.html")
-
-
-@app.route('/profile', methods=['POST'])
-def profile_process():
-
-    skin_type = request.form["skin_type"]
-    skin_concern = request.form["skin_concern"]
-    age = int(request.form["age"])
-    environment = request.form["environment"]
-
-    new_profile = User(skin_type=skin_type, skin_concern=skin_concern, age=age, zipcode=zipcode)
-
-    db.session.add(new_profile)
-    db.session.commit()
-
-    flash("Profile submitted.")
-    return redirect("/")
+    return redirect("/profile")
 
 
 @app.route('/login', methods=['GET'])
@@ -104,9 +86,33 @@ def logout():
 
     del session["user_id"]
     flash("You have logged out.")
-    return redirect ("/")
+    return redirect("/")
 
-"""Route below is to page that shows list of users."""
+
+@app.route('/profile', methods=['GET'])
+def profile_form():
+
+        return render_template("profile_form.html")
+
+
+@app.route('/profile', methods=['POST'])
+def profile_process():
+
+    skin_type = request.form["skin_type"]
+    skin_concern = request.form["skin_concern"]
+    age = int(request.form["age"])
+    environment = request.form["environment"]
+
+    new_profile = User(skin_type=skin_type, skin_concern=skin_concern, age=age, zipcode=zipcode)
+
+    db.session.add(new_profile)
+    db.session.commit()
+
+    flash("Profile submitted.")
+    return redirect("/")
+
+
+"""Route to page that shows list of users."""
 # @app.route("/users")
 # def user_list():
 #     """Show list of users."""
@@ -114,71 +120,72 @@ def logout():
 #     users = User.query.all()
 #     return render_template("user_list.html", users=users)
 
+"""Route to page that shows list of user profile."""
+# @app.route("/users/<int:user_id>")
+# def user_detail(user_id):
+#     """Show user profile."""
 
-@app.route("/users/<int:user_id>")
-def user_detail(user_id):
-    """Show user profile."""
+#     user = User.query.get(user_id)
+#     return render_template("user.html", user=user)
 
-    user = User.query.get(user_id)
-    return render_template("user.html", user=user)
+"""Route to page that shows list of movies."""
+# @app.route("/movies")
+# def movie_list():
+#     """Show list of movies."""
 
-
-@app.route("/movies")
-def movie_list():
-    """Show list of movies."""
-
-    movies = Movie.query.order_by(Movie.title).all()
-
-
-    return render_template("movie_list.html", movies=movies)
+#     movies = Movie.query.order_by(Movie.title).all()
 
 
-@app.route("/movies/<int:movie_id>", methods=['GET'])
-def movie_detail(movie_id):
-    
+#     return render_template("movie_list.html", movies=movies)
 
-    movie = Movie.query.get(movie_id)
+"""Route to page that shows single movie's profile. Also checks to see if
+user is logged in, has reviewed movie yet, etc."""
+# @app.route("/movies/<int:movie_id>", methods=['GET'])
+# def movie_detail(movie_id):
 
-    user_id = session.get("user_id")
 
-    if user_id:
-        user_rating = Rating.query.filter_by(
-            movie_id=movie_id, user_id=user_id).first()
+#     movie = Movie.query.get(movie_id)
 
-    else:
-        user_rating = None
+#     user_id = session.get("user_id")
+
+#     if user_id:
+#         user_rating = Rating.query.filter_by(
+#             movie_id=movie_id, user_id=user_id).first()
+
+#     else:
+#         user_rating = None
 
     # Get average rating of movie
 
-    rating_scores = [r.score for r in movie.ratings]
-    avg_rating = float(sum(rating_scores)) / len(rating_scores)
+    # rating_scores = [r.score for r in movie.ratings]
+    # avg_rating = float(sum(rating_scores)) / len(rating_scores)
 
-    prediction = None
+    # prediction = None
 
 
-@app.route("/movies/<int:movie_id>", methods=['POST'])
-def rate_movie(movie_id):
+# @app.route("/movies/<int:movie_id>", methods=['POST'])
+# def rate_movie(movie_id):
 
-    score = int(request.form["score"])
+#     score = int(request.form["score"])
 
-    user_id = session.get("user_id")
-    if not user_id:
-        raise Exception("You are not logged in.")
+#     user_id = session.get("user_id")
+#     if not user_id:
+#         raise Exception("You are not logged in.")
 
-    rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+#     rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
 
-    if rating:
-        rating.score = score
-        flash ("Your rating has been updated!")
+#     if rating:
+#         rating.score = score
+#         flash ("Your rating has been updated!")
 
-    else:
-        rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
-        flash("Your rating has been added!")
-        db.session.add(rating)
+#     else:
+#         rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
+#         flash("Your rating has been added!")
+#         db.session.add(rating)
 
-    db.session.commit()
+#     db.session.commit()
 
-    return redirect("/movies/%s" % movie_id)
+#     return redirect("/movies/%s" % movie_id)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point

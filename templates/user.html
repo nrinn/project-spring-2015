@@ -1,6 +1,28 @@
 {% extends 'base.html' %}
 {% block content %}
 
+  <h1>{{ user.email }} ({{ user.user_id }})</h1>
+
+  <p>Name: {{ user.firstname }} {{ user.lastname }}</p>
+  <p>Zipcode: {{ user.zipcode }}</p>
+
+  {% if user.ratings %}
+
+    <h2>Skin Specialty/h2>
+    <ul>
+    {% for specialty in user.specialties %}
+      <li>
+        <a href="/specialties/{{ specialty.product_category_id }}">{{ specialty.product_category.product_category_name }}</a>
+        was rated {{ rating.score }}
+      </li>
+    {% endfor %}
+    </ul>
+  {% endif %}
+
+{% endblock %}
+
+<!-- {% block content %}
+
 <h1>User Details</h1>
 
    <ul>
@@ -23,4 +45,4 @@
         </ul>
   {% endif %}
 
-{% endblock %}
+{% endblock %} -->
