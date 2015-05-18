@@ -7,7 +7,7 @@
 
     <div class="form-group">
         <label>
-            Which of the following statements best describes your skin?<br>
+            Question 1: Which of the following statements best describes your skin?<br>
              <select name="skin_type" class="form-control">
                 <option value="Oily">My skin produces oil all over my face.</option>
                 <option value="Combination">My skin only produces oil in certain areas like my forehead, nose, and/or chin/jawline.</option>
@@ -21,22 +21,23 @@
 
     <div class="form-group">
         <label>
-            What are your main skin concerns. Select up to 3.<br>
+            Question 2: What are your main skin concerns. Select up to 3.<br>
             <input type="checkbox" name="skin_concern" value="Acne" /> Acne<br>
-            <input type="checkbox" name="skin_concern" value="Scars" /> Scars or Discoloration<br>
-            <input type="checkbox" name="skin_concern" value="Blackheads" /> Blackheads or Clogged Pores<br> 
+            <input type="checkbox" name="skin_concern" value="Aging" /> Aging<br>
+            <input type="checkbox" name="skin_concern" value="Blackheads" /> Blackheads or Clogged Pores<br>
             <input type="checkbox" name="skin_concern" value="Dryness" /> Dryness<br>
             <input type="checkbox" name="skin_concern" value="Oiliness" /> Oiliness<br>
-           <input type="checkbox" name="skin_concern" value="Sensitivity" /> Sensitivity<br>
-            <input type="checkbox" name="skin_concern" value="Aging" /> Aging<br>
-            <input type="checkbox" name="skin_concern" value="Sun" /> Sun Damage<br>
             <input type="checkbox" name="skin_concern" value="Redness" /> Redness<br>
+            <input type="checkbox" name="skin_concern" value="Scars" /> Scars or Discoloration<br>
+            <input type="checkbox" name="skin_concern" value="Sensitivity" /> Sensitivity<br>
+            <input type="checkbox" name="skin_concern" value="Sun" /> Sun Damage<br>
+
         </label>
     </div>
 
     <div class="form-group">
         <label>
-            What is your current age?<br>
+            Question 3: Which of the following best describes your current age?<br>
             <input value="under_18" name="age" type="radio"> Under 18<br>
             <input value="19-29" name="age" type="radio"> 19-29<br>
             <input value="30-39" name="age" type="radio"> 30-39<br>
@@ -46,15 +47,21 @@
         </label>
     </div>
 
+
     <div class="form-group">
         <label>
-            What is your environment like? Select all that apply.<br>
-            <input type="checkbox" name="environment" value="Urban" />Urban<br>
-            <input type="checkbox" name="environment" value="Suburban" />Suburban<br>
-            <input type="checkbox" name="environment" value="Rural" />Rural<br> 
-            <input type="checkbox" name="environment" value="Dry" />Dry<br>
-            <input type="checkbox" name="environment" value="Humid" />Humid<br>
-            <input type="checkbox" name="environment" value="Neither" />Neither Dry nor Humid<br>    
+            Question 4: How would you best characterize the area in which you live?<br>
+            <input value="urban" name="location" type="radio"> Urban<br>
+            <input value="suburb" name="age" type="radio"> Suburb<br>
+            <input value="rural" name="age" type="radio"> Rural<br>
+    </div>
+
+    <div class="form-group">
+        <label>
+            Question 5: What is the weather like typically where you live?<br>
+            <input value="humid" name="weather" type="radio"> Humid<br>
+            <input value="dry" name="weather" type="radio"> Dry<br>
+            <input value="neither" name="weather" type="radio"> Neither Humid nor Dry<br>
         </label>
     </div>
 
