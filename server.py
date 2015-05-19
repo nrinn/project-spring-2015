@@ -101,15 +101,16 @@ def profile_process():
     skin_type = request.form["skin_type"]
     skin_concern = request.form["skin_concern"]
     age = int(request.form["age"])
-    environment = request.form["environment"]
+    location = request.form["location"]
+    weather = request.form["weather"]
 
-    new_profile = User(skin_type=skin_type, skin_concern=skin_concern, age=age, zipcode=zipcode)
+    new_profile = User(skin_type=skin_type, skin_concern=skin_concern, age=age, location=location, weather=weather)
 
     db.session.add(new_profile)
     db.session.commit()
 
     flash("Profile submitted.")
-    return redirect("/")
+    return redirect("/users/<int:user_id>")
 
 
 """Route to page that shows list of users."""
@@ -120,23 +121,57 @@ def profile_process():
 #     users = User.query.all()
 #     return render_template("user_list.html", users=users)
 
-"""Route to page that shows list of user profile."""
-# @app.route("/users/<int:user_id>")
-# def user_detail(user_id):
-#     """Show user profile."""
 
-#     user = User.query.get(user_id)
-#     return render_template("user.html", user=user)
-
-"""Route to page that shows list of movies."""
-# @app.route("/movies")
-# def movie_list():
-#     """Show list of movies."""
-
-#     movies = Movie.query.order_by(Movie.title).all()
+"""Route to page that shows user profile."""
 
 
-#     return render_template("movie_list.html", movies=movies)
+@app.route("/users/<int:user_id>")
+def user_detail(user_id):
+    """Show user profile."""
+
+    user = User.query.get(user_id)
+    return render_template("user.html", user=user)
+
+    """Route to page that shows list of all specialties."""
+# @app.route("/specialties")
+# def specialty_list():
+#     """Show list of all specialties."""
+
+#     specialty = Specialty.query.order_by(Specialty.specialty_name).all()
+
+
+#     return render_template("specialty_list.html", specialties=specialties)
+
+"""Route to page that shows single specialty profile."""
+# @app.route("/specialties/<int:specialty_id>")
+# def specialty_detail(specialty_id):
+#     """Show specialty profile."""
+
+#     specialty = Specialty.query.get(specialty_id)
+#     return render_template("specialty.html", specialty=specialty)
+
+
+"""Route to page that shows list of product_categories."""
+# @app.route("/product_categories")
+# def product_category_list():
+#     """Show list of product_categories."""
+
+#     product_category = Product_Category.query.order_by(Product_Category.product_category_name).all()
+
+
+#     return render_template("product_category_list.html", product_categories=product_categories)
+
+
+"""Route to page that shows a product category's list of real products."""
+# @app.route("/real_product_list")
+# def real_product_list():
+#     """Show list of real-life products that fit into that product category"""
+
+#     product = Product.query.order_by(Product.product_name).all()
+
+
+#     return render_template("real_product_list.html", products=products)
+
 
 """Route to page that shows single movie's profile. Also checks to see if
 user is logged in, has reviewed movie yet, etc."""

@@ -1,48 +1,24 @@
-{% extends 'base.html' %}
 {% block content %}
-
-  <h1>{{ user.email }} ({{ user.user_id }})</h1>
-
-  <p>Name: {{ user.firstname }} {{ user.lastname }}</p>
-  <p>Zipcode: {{ user.zipcode }}</p>
-
-  {% if user.ratings %}
-
-    <h2>Skin Specialty/h2>
-    <ul>
-    {% for specialty in user.specialties %}
-      <li>
-        <a href="/specialties/{{ specialty.product_category_id }}">{{ specialty.product_category.product_category_name }}</a>
-        was rated {{ rating.score }}
-      </li>
-    {% endfor %}
-    </ul>
-  {% endif %}
-
-{% endblock %}
-
-<!-- {% block content %}
 
 <h1>User Details</h1>
 
    <ul>
         <li>User ID: {{ user.user_id }}</li>
-        <li>User Type: {{ user.user_type_id }}</li>
-        <li>User Email: {{ user.email }}</li>
-        <li>Age: {{ user.age }}</li>
+        <li>Name: {{ user.firstname }} {{ user.lastname }} </li>
+        <li>Email: {{ user.email }}</li>
         <li>Zipcode: {{ user.zipcode }}</li>
     </ul>
-        {% if user.product_categories %}
+         {% if user.ratings %}
 
-        <h2>Recommended Products Based on Your Profile</h2>
+        <h2>User Ratings</h2>
         <ul>
-        {% for product_category in user.ratings %}
+        {% for rating in user.ratings %}
             <li>
-                <a href="/movies/{{ rating.movie_id }}">{{ rating.movie.title }}</a>
-         was given the rating of: {{ rating.score }}
+                You gave <a href="/products/{{ rating.product_id }}">{{ rating.product.product_name }}</a>
+         the rating of: {{ rating.score }}
             </li>
     {% endfor %}
         </ul>
   {% endif %}
 
-{% endblock %} -->
+{% endblock %}
