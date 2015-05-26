@@ -1,0 +1,29 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>Your Specialty is</h1>
+
+
+         {% if user.specialties %}
+
+        <h2>User Specialty</h2>
+        <ul>
+        {% for specialty in user.specialties %}
+            <li>
+                You received <a href="/users/{{ specialty.user_id }}">{{ specialty.user_id }}</a>
+         the type/specialty of: {{ specialty.specialty_name }}
+            </li>
+    {% endfor %}
+        </ul>
+  {% endif %}
+
+    <ul>
+        <li>User ID: {{ user.user_id }}</li>
+        <li>Name: {{ user.firstname }} {{ user.lastname }} </li>
+        <li>Email: {{ user.email }}</li>
+        <li>Zipcode: {{ user.zipcode }}</li>
+    </ul>
+
+  <h4><a href = "/">Return to Homepage</a></h4>
+
+{% endblock %}

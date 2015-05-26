@@ -3,9 +3,12 @@
 from jinja2 import StrictUndefined
 
 from flask import Flask, render_template, redirect, request, flash, session
+from flask_wtf import Form, validators
+from wtforms import FloatField
+from wtforms.validators import NumberRange
 from flask_debugtoolbar import DebugToolbarExtension
 
-from model import connect_to_db, db, User, Specialty, Product_Category, Product
+from model import connect_to_db, db, User, User_Concern, Concern, Specialty, Spec_PC, Product_Category, Product, Rating
 
 
 app = Flask(__name__)
@@ -99,18 +102,129 @@ def profile_form():
 def profile_process():
 
     skin_type = request.form["skin_type"]
-    skin_concern = request.form["skin_concern"]
-    age = int(request.form["age"])
+    concern_name = request.form["concern_name"]
+    # age = int(request.form["age"])
+    age = request.form["age"]
     location = request.form["location"]
     weather = request.form["weather"]
 
-    new_profile = User(skin_type=skin_type, skin_concern=skin_concern, age=age, location=location, weather=weather)
+    new_profile = User(skin_type=skin_type, age=age, location=location, weather=weather)
+    new_concerns = Concern(concern_name=concern_name)
 
     db.session.add(new_profile)
+    db.session.add(new_concerns)
     db.session.commit()
 
     flash("Profile submitted.")
-    return redirect("/users/<int:user_id>")
+    return redirect("/specialties/<int:specialty_id>")
+
+"""Route to page that shows single user's profile results."""
+
+
+@app.route("/specialties/<int:specialty_id>", methods=['GET'])
+def profile_results(specialty_id):
+    """Show user's profile results (specialty)."""
+
+    specialty = Specialty.query.get(specialty_id)
+    return render_template("specialty.html", specialty=specialty)
+
+#     user_id = session.get("user_id")
+#     profile_score = session.get("profile_score")
+
+    # Here is where I will define what profile scores = each type.
+    # e.g. if profile_score < 50 and > 40:
+    #           specialty_name = type 5
+
+#     if profile_score
+
+
+#     if user_id:
+#         user_rating = Rating.query.filter_by(
+#             movie_id=movie_id, user_id=user_id).first()
+
+#     else:
+#         user_rating = None
+
+#     Get average rating of movie
+
+#     rating_scores = [r.score for r in movie.ratings]
+#     avg_rating = float(sum(rating_scores)) / len(rating_scores)
+
+#     prediction = None
+
+
+# @app.route("/movies/<int:movie_id>", methods=['POST'])
+# def rate_movie(movie_id):
+
+#     score = int(request.form["score"])
+
+#     user_id = session.get("user_id")
+#     if not user_id:
+#         raise Exception("You are not logged in.")
+
+#     rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+
+#     if rating:
+#         rating.score = score
+#         flash ("Your rating has been updated!")
+
+#     else:
+#         rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
+#         flash("Your rating has been added!")
+#         db.session.add(rating)
+
+#     db.session.commit()
+
+#     return redirect("/movies/%s" % movie_id)
+
+"""Route to page that shows single movie's profile. Also checks to see if
+user is logged in, has reviewed movie yet, etc."""
+# @app.route("/movies/<int:movie_id>", methods=['GET'])
+# def movie_detail(movie_id):
+
+
+#     movie = Movie.query.get(movie_id)
+
+#     user_id = session.get("user_id")
+
+#     if user_id:
+#         user_rating = Rating.query.filter_by(
+#             movie_id=movie_id, user_id=user_id).first()
+
+#     else:
+#         user_rating = None
+
+    # Get average rating of movie
+
+    # rating_scores = [r.score for r in movie.ratings]
+    # avg_rating = float(sum(rating_scores)) / len(rating_scores)
+
+    # prediction = None
+
+
+# @app.route("/movies/<int:movie_id>", methods=['POST'])
+# def rate_movie(movie_id):
+
+#     score = int(request.form["score"])
+
+#     user_id = session.get("user_id")
+#     if not user_id:
+#         raise Exception("You are not logged in.")
+
+#     rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
+
+#     if rating:
+#         rating.score = score
+#         flash ("Your rating has been updated!")
+
+#     else:
+#         rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
+#         flash("Your rating has been added!")
+#         db.session.add(rating)
+
+#     db.session.commit()
+
+#     return redirect("/movies/%s" % movie_id)
 
 
 """Route to page that shows list of users."""
