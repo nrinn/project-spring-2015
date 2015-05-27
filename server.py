@@ -15,6 +15,7 @@ app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
+app.debug = True
 
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 # This is horrible. Fix this so that, instead, it raises an error.
@@ -95,24 +96,89 @@ def logout():
 @app.route('/profile', methods=['GET'])
 def profile_form():
 
-        return render_template("profile_form.html")
+    # user = User.query.get(user_id)
+
+    return render_template("profile_form.html")
 
 
 @app.route('/profile', methods=['POST'])
 def profile_process():
-
-    skin_type = request.form["skin_type"]
-    concern_name = request.form["concern_name"]
+    import pdb; pdb.set_trace() #
+    print '\n\n\n%s\n\n\n' % request.form
+    skin_type = request.form.get("skin_type")
+    acne = request.form.get("acne")
+    aging = request.form.get("aging")
+    blackheads = request.form.get("blackheads")
+    dryness = request.form.get("dryness")
+    oiliness = request.form.get("oiliness")
+    redness = request.form.get("redness")
+    scars = request.form.get("scars")
+    sensitivity = request.form.get("sensitivity")
+    sun = request.form.get("sun")
     # age = int(request.form["age"])
-    age = request.form["age"]
-    location = request.form["location"]
-    weather = request.form["weather"]
+    age = request.form.get("age")
+    location = request.form.get("location")
+    weather = request.form.get("weather")
+    print '\n\n\nhi  1\n\n\n'
+    user_id = session.get("user_id")
+    print '\n\n\nhi  2\n\n\n'
+    if not user_id:
+        flash("User does not exist. Please try again")
+        return redirect("/login")
+    print '\n\n\nhi  3\n\n\n'
+    user = User.query.get(user_id)
+    scores_for_user_answers = [skin_type, age, location, weather, sun, sensitivity, scars, redness, oiliness, dryness, acne, blackheads, aging]
+    user_score = 0
+    for el in scores_for_user_answers:
+        user_score += el
 
-    new_profile = User(skin_type=skin_type, age=age, location=location, weather=weather)
-    new_concerns = Concern(concern_name=concern_name)
+        # create age, location & weather answer key
+        # age_answer_key = {'under_18': 1} key = string related to form, value = value for that answer twd the score
 
-    db.session.add(new_profile)
-    db.session.add(new_concerns)
+    # update, don't create, use . syntax:
+   # user.skintype = thing from form, for stuff on user table it all gets added once b/c it is once per object
+    user.skin_type = skin_type
+    user.age = age
+    user.location = location
+    user.weather = weather
+    db.session.add(user)
+    print '\n\n\nhi  4\n\n\n'
+   # new_profile = User(skin_type=skin_type, age=age, location=location, weather=weather)
+
+    # concern = Concern.query.filter_by(concern_name=concern_name.lower()).all()
+
+    # deletes any row in user_concern table mapping this user to that concern, clears out info from uc table
+    User_Concern.query.filter_by(user_id=user_id).delete()
+    db.session.commit()
+    # create user concern w/concern id of 1 and user_id of user_id
+    if acne:
+        acne = User_Concern(user_id=user_id, concern_id=1)
+        db.session.add(acne)
+    if aging:
+        aging = User_Concern(user_id=user_id, concern_id=2)
+        db.session.add(aging)
+    if blackheads:
+        blackheads = User_Concern(user_id=user_id, concern_id=3)
+        db.session.add(blackheads)
+    if dryness:
+        dryness = User_Concern(user_id=user_id, concern_id=4)
+        db.session.add(dryness)
+    if oiliness:
+        oiliness = User_Concern(user_id=user_id, concern_id=5)
+        db.session.add(oiliness)
+    if redness:
+        redness = User_Concern(user_id=user_id, concern_id=6)
+        db.session.add(redness)
+    if scars:
+        scars = User_Concern(user_id=user_id, concern_id=7)
+        db.session.add(scars)
+    if sensitivity:
+        sensitivity = User_Concern(user_id=user_id, concern_id=8)
+        db.session.add(sensitivity)
+    if sun:
+        sun = User_Concern(user_id=user_id, concern_id=9)
+        db.session.add(sun)
+
     db.session.commit()
 
     flash("Profile submitted.")
