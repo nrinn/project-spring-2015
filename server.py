@@ -136,7 +136,7 @@ def profile_process():
         # age_answer_key = {'under_18': 1} key = string related to form, value = value for that answer twd the score
 
     # update, don't create, use . syntax:
-   # user.skintype = thing from form, for stuff on user table it all gets added once b/c it is once per object
+    # user.skintype = thing from form, for stuff on user table it all gets added once b/c it is once per object
     user.skin_type = skin_type
     user.age = age
     user.location = location
