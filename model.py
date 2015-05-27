@@ -74,6 +74,7 @@ class User_Concern(db.Model):
     uc_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
     concern_id = db.Column(db.Integer, db.ForeignKey('concerns.concern_id'))
+    # concern_name = db.Column(db.String(64), db.ForeignKey('concerns.concern_name'))
 
     # Define relationship to user
     user = db.relationship("User", backref=db.backref('user_concerns', order_by=uc_id))

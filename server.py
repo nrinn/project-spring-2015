@@ -103,8 +103,8 @@ def profile_form():
 
 @app.route('/profile', methods=['POST'])
 def profile_process():
-    import pdb; pdb.set_trace() #
-    print '\n\n\n%s\n\n\n' % request.form
+    # import pdb; pdb.set_trace()
+    # print '\n\n\n%s\n\n\n' % request.form
     skin_type = request.form.get("skin_type")
     acne = request.form.get("acne")
     aging = request.form.get("aging")
@@ -119,30 +119,56 @@ def profile_process():
     age = request.form.get("age")
     location = request.form.get("location")
     weather = request.form.get("weather")
-    print '\n\n\nhi  1\n\n\n'
+    # print '\n\n\nhi  1\n\n\n'
     user_id = session.get("user_id")
-    print '\n\n\nhi  2\n\n\n'
+    # print '\n\n\nhi  2\n\n\n'
     if not user_id:
         flash("User does not exist. Please try again")
         return redirect("/login")
-    print '\n\n\nhi  3\n\n\n'
+    # print '\n\n\nhi  3\n\n\n'
     user = User.query.get(user_id)
-    scores_for_user_answers = [skin_type, age, location, weather, sun, sensitivity, scars, redness, oiliness, dryness, acne, blackheads, aging]
+    scores_for_user_answers = [skin_type, age, location, weather, acne, aging, blackheads, dryness, oiliness, redness, scars, sensitivity, sun]
     user_score = 0
-    for el in scores_for_user_answers:
-        user_score += el
+    for i in scores_for_user_answers:
+        user_score += i
 
         # create age, location & weather answer key
         # age_answer_key = {'under_18': 1} key = string related to form, value = value for that answer twd the score
 
-    # update, don't create, use . syntax:
-    # user.skintype = thing from form, for stuff on user table it all gets added once b/c it is once per object
+    # user_answers = {'skin_type': skin_type, 'age': age, 'location': location, 'weather': weather}
+    # #calculate here
+
+    # skin_type_answers = {
+    #     'oily': 1 # 1 is the value of that answer for that question. when all values are added it = specialty/type
+    # }
+
+    # age_answers = {
+    #     'under_18': 1
+    # }
+
+    # location_answers = {
+    #     'urban': 1
+    # }
+
+    # weather_answers = {
+    #     'humid': 1
+    # }
+
+    # answer_key = {'skin_type': skin_type_answers, 'age': age_answers, 'location': location_answers, 'weather': weather_answers}
+    # user_score = 0
+    # for answer in user_answers.iteritems(): #iteritems = can do a for loop over a dict
+    #     score_for_this_question = answer_key[answer[0]][answer[1]]
+    #     user_score += score_for_this_question
+    #     # goes through all answers and adds value for each answer to user_score
+
+   # update, don't create, use . syntax:
+   # user.skintype = thing from form, for stuff on user table it all gets added once b/c it is once per object
     user.skin_type = skin_type
     user.age = age
     user.location = location
     user.weather = weather
     db.session.add(user)
-    print '\n\n\nhi  4\n\n\n'
+    # print '\n\n\nhi  4\n\n\n'
    # new_profile = User(skin_type=skin_type, age=age, location=location, weather=weather)
 
     # concern = Concern.query.filter_by(concern_name=concern_name.lower()).all()
