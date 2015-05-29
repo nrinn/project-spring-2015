@@ -284,7 +284,7 @@ def profile_process():
     db.session.commit()
 
     flash("Profile submitted.")
-    return redirect("/users/<int:user_id>")
+    return redirect("/users/%s" % user.user_id)
 
 
 """Route to page that shows user profile with profile results (specialty). 

@@ -18,18 +18,6 @@
         <li>Weather Type: {{ user.weather }}</li>
 
     </ul>
-         {% if user.ratings %}
-
-        <h2>User Ratings</h2>
-        <ul>
-        {% for rating in user.ratings %}
-            <li>
-                You gave <a href="/products/{{ rating.product_id }}">{{ rating.product.product_name }}</a>
-         the rating of: {{ rating.score }}
-            </li>
-    {% endfor %}
-        </ul>
-  {% endif %}
 
   <h4><a href = "/">Return to Homepage</a></h4>
 
