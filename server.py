@@ -1,9 +1,9 @@
-"""Glow Petite"""
+"""Snail Love"""
 
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, User_Concern, Concern, Specialty, Spec_PC, Product_Category, Product, Rating
+from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Beauty_Type_Category, Product_Category, Product, Rating
 import operator
 
 app = Flask(__name__)
@@ -44,9 +44,12 @@ def register_process():
 
     new_user = User(email=email, password=password, firstname=firstname, lastname=lastname, zipcode=zipcode)
 
-    # Adds the new user to the database.
+    # Adds the new user to the database. Session of connection to DB.
     db.session.add(new_user)
     db.session.commit()
+
+    #browser/cookie storing session
+    session["user_id"] = user.user_id
 
     flash("User %s added." % email)
 
@@ -95,7 +98,13 @@ def logout():
 @app.route('/profile', methods=['GET'])
 def profile_form():
 
-    # user = User.query.get(user_id)
+    user_id = session.get("user_id")
+
+    if not user_id:
+        flash("User must be logged in.")
+        return redirect("/login")
+
+    user = User.query.get(user_id)
 
     return render_template("profile_form.html")
 
@@ -103,42 +112,27 @@ def profile_form():
 @app.route('/profile', methods=['POST'])
 def profile_process():
 
-    # Gets profile form variables and adds them to user_id.
-    #Q1: Gets user's skin type (dropdown)
-    skin_type = request.form.get("skin_type")
-    #Q2: Allows user to select up to 3 skin "concerns" from list (checkbox)
-    acne = request.form.get("acne")
-    aging = request.form.get("aging")
-    blackheads = request.form.get("blackheads")
-    dryness = request.form.get("dryness")
-    oiliness = request.form.get("oiliness")
-    redness = request.form.get("redness")
-    scars = request.form.get("scars")
-    sensitivity = request.form.get("sensitivity")
-    sun = request.form.get("sun")
-    #Q3: Gets the user's age range (i.e. 19-29) (radio)
-    age = request.form.get("age")
-    #Q4: Gets the user's location type (radio)
-    location = request.form.get("location")
-    #Q5: Gets the user's weather type (radio)
-    weather = request.form.get("weather")
-
     user_id = session.get("user_id")
-
-    #This says that the profile is only added if the user is logged in.
-    #If they have submitted profile in past, it overwrites those results with new results.
-    #If not, it directs them to login.
-
-    #Fine as long as this is an existing user submitting profile form (not for their 1st time)
-    #But if this user is registering and then submitting profile for 1st time ever,
-    #it will direct them to login after hitting submit on profile (instead of taking them to user page/results)
-    #and it will NOT add the profile form data to the DB.
 
     if not user_id:
         flash("User does not exist. Please try again")
         return redirect("/login")
-    print '\n\n\nhi  3\n\n\n'
+
     user = User.query.get(user_id)
+
+    # Gets profile form variables and adds them to user_id.
+    #Q1: Gets user's skin type (dropdown)
+    skin_type = request.form.get("skin_type")
+
+    #Q2: Allows user to select up to 3 skin "concerns" from list (checkbox)
+    acne = request.form.get("acne")
+    aging = request.form.get("aging")
+    dryness = request.form.get("dryness")
+    dullness = request.form.get("dullness")
+    oiliness = request.form.get("oiliness")
+    scars = request.form.get("scars")
+
+
 
     #weight types to see which is scored higher?
 
@@ -154,59 +148,37 @@ def profile_process():
     # user_answers = {'skin_type': skin_type, 'age': age, 'location': location, 'weather': weather}
     # #calculate here
 
-#dictionary with all 9 specialties/types as the keys and the values as 0 for each (for now)
-    specialties = {
+#dictionary with all 4 beauty types as the keys and the values as 0 for each (for now)
+    beauty_types = {
         1: 0,  # "the happy person/kathy"
         2: 0,
         3: 0,
-        4: 0,
-        5: 0,
-        6: 0,
-        7: 0,
-        8: 0,
-        9: 0, }
+        4: 0,}
 
     if oiliness:
-        specialties[3] += 1
+        beauty_types[7] += 40
 
     if oiliness and age == '19-29':
-        specialties[2] += 3
+        beauty_types[2] += 50
 
-    print specialties
+    print beauty_types
 
-    sorted_specialties = sorted(specialties.items(), key=operator.itemgetter(1))
-    print sorted_specialties
+    sorted_beauty_types = sorted(beauty_types.items(), key=operator.itemgetter(1))
+    print sorted_beauty_types
 
 #go through all the info in the profile form and increment all 9 types based upon info
-#when I'm done, the values will be an integer. then sort the "specialties" dict above
-#to get the highest value for each. that highest value for each will be my "specialty/type",
-#I can then direct the user twd their specialty/type
+#when I'm done, the values will be an integer. then sort the "beauty_types" dict above
+#to get the highest value for each. that highest value for each will be my "beauty type",
+#I can then direct the user twd their beauty type.
 
-#weight every answer and set it to specialty
-    # if oily:
-    #     specialties[1] += 1
-
-    # if combination:
-    #     specialties[2] += 1
-
-    # if normal:
-    #     specialties[3] += 1
-
-    # if dry:
-    #     specialties[4] += 1
-
-    # if dehydrated:
-    #     specialties[5] += 1
-
-    # if sensitive:
-    #     specialties[6] += 1
+#weight every answer and set it to beauty type.
 
 
-            #at the very end go through dict and find value that is highest, that will be end user's specialty
-            #sort dictionary at the end -- gives me specialyt # at the very end, assign it to the user, then save
+#at the very end go through dict and find value that is highest, that will be end user's beauty type
+#sort dictionary at the end -- gives me beauty type # at the very end, assign it to the user, then save
 
     # skin_type_answers = {
-    #     'oily': 1 # 1 is the value of that answer for that question. when all values are added it = specialty/type
+    #     'oily': 1 # 1 is the value of that answer for that question. when all values are added it = beauty type
     # }
 
     # age_answers = {
@@ -231,14 +203,6 @@ def profile_process():
    # update, don't create, use . syntax:
    # user.skintype = thing from form, for stuff on user table it all gets added once b/c it is once per object
     user.skin_type = skin_type
-    user.age = age
-    user.location = location
-    user.weather = weather
-    # db.session.add(user)
-    print '\n\n\nhi  4\n\n\n'
-   # new_profile = User(skin_type=skin_type, age=age, location=location, weather=weather)
-
-    # concern = Concern.query.filter_by(concern_name=concern_name.lower()).all()
 
     # deletes any row in user_concern table mapping this user to that concern, clears out info from uc table
     User_Concern.query.filter_by(user_id=user_id).delete()
@@ -250,36 +214,27 @@ def profile_process():
     if aging:
         aging = User_Concern(user_id=user_id, concern_id=2)
         db.session.add(aging)
-    if blackheads:
-        blackheads = User_Concern(user_id=user_id, concern_id=3)
-        db.session.add(blackheads)
     if dryness:
-        dryness = User_Concern(user_id=user_id, concern_id=4)
+        dryness = User_Concern(user_id=user_id, concern_id=3)
         db.session.add(dryness)
+    if dullness:
+        dullness = User_Concern(user_id=user_id, concern_id=4)
+        db.session.add(dullness)
     if oiliness:
         oiliness = User_Concern(user_id=user_id, concern_id=5)
         db.session.add(oiliness)
-    if redness:
-        redness = User_Concern(user_id=user_id, concern_id=6)
-        db.session.add(redness)
     if scars:
-        scars = User_Concern(user_id=user_id, concern_id=7)
+        scars = User_Concern(user_id=user_id, concern_id=6)
         db.session.add(scars)
-    if sensitivity:
-        sensitivity = User_Concern(user_id=user_id, concern_id=8)
-        db.session.add(sensitivity)
-    if sun:
-        sun = User_Concern(user_id=user_id, concern_id=9)
-        db.session.add(sun)
 
 
     #dict w/all types as keys, values as 0 to start, go thru info in form, and 
     #based on info increment all 9 types, once i'm done values will be some 
     #integer and I'll sort to get highest value, highest value will be my 
-    #specialty type, I can direct user to specialty type
+    #beauty type, I can direct user to beauty type
 
-    print "assigning user specialty", sorted_specialties[0][1]
-    user.specialty_id = sorted_specialties[0][1]
+    print "assigning beauty type", sorted_beauty_types[0][1]
+    user.beauty_type_id = sorted_beauty_types[0][1]
     db.session.add(user)
     db.session.commit()
 
@@ -287,7 +242,7 @@ def profile_process():
     return redirect("/users/%s" % user.user_id)
 
 
-"""Route to page that shows user profile with profile results (specialty). 
+"""Route to page that shows user profile with profile results (beauty type). 
 Profile submit button always brings you here, whether it is your 1st time 
 filling out the form or your 10th. """
 
