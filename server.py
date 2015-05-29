@@ -1,15 +1,10 @@
 """Glow Petite"""
 
 from jinja2 import StrictUndefined
-
 from flask import Flask, render_template, redirect, request, flash, session
-from flask_wtf import Form, validators
-from wtforms import FloatField
-from wtforms.validators import NumberRange
 from flask_debugtoolbar import DebugToolbarExtension
-
 from model import connect_to_db, db, User, User_Concern, Concern, Specialty, Spec_PC, Product_Category, Product, Rating
-
+import operator
 
 app = Flask(__name__)
 
@@ -40,20 +35,22 @@ def register_form():
 def register_process():
     """Process registration."""
 
-    # Get form variables
+    # Get registration form variables
     email = request.form["email"]
     password = request.form["password"]
     firstname = request.form["firstname"]
     lastname = request.form["lastname"]
-    # age = int(request.form["age"])
     zipcode = request.form["zipcode"]
 
     new_user = User(email=email, password=password, firstname=firstname, lastname=lastname, zipcode=zipcode)
 
+    # Adds the new user to the database.
     db.session.add(new_user)
     db.session.commit()
 
     flash("User %s added." % email)
+
+    # Takes user to profile form immediately after submitting registration.
     return redirect("/profile")
 
 
@@ -82,6 +79,8 @@ def login_process():
     session["user_id"] = user.user_id
 
     flash("You are logged in!")
+
+    # Takes the user to their user page when they login.
     return redirect("/users/%s" % user.user_id)
 
 
@@ -103,9 +102,11 @@ def profile_form():
 
 @app.route('/profile', methods=['POST'])
 def profile_process():
-    # import pdb; pdb.set_trace()
-    # print '\n\n\n%s\n\n\n' % request.form
+
+    # Gets profile form variables and adds them to user_id.
+    #Q1: Gets user's skin type (dropdown)
     skin_type = request.form.get("skin_type")
+    #Q2: Allows user to select up to 3 skin "concerns" from list (checkbox)
     acne = request.form.get("acne")
     aging = request.form.get("aging")
     blackheads = request.form.get("blackheads")
@@ -115,28 +116,94 @@ def profile_process():
     scars = request.form.get("scars")
     sensitivity = request.form.get("sensitivity")
     sun = request.form.get("sun")
-    # age = int(request.form["age"])
+    #Q3: Gets the user's age range (i.e. 19-29) (radio)
     age = request.form.get("age")
+    #Q4: Gets the user's location type (radio)
     location = request.form.get("location")
+    #Q5: Gets the user's weather type (radio)
     weather = request.form.get("weather")
-    # print '\n\n\nhi  1\n\n\n'
+
     user_id = session.get("user_id")
-    # print '\n\n\nhi  2\n\n\n'
+
+    #This says that the profile is only added if the user is logged in.
+    #If they have submitted profile in past, it overwrites those results with new results.
+    #If not, it directs them to login.
+
+    #Fine as long as this is an existing user submitting profile form (not for their 1st time)
+    #But if this user is registering and then submitting profile for 1st time ever,
+    #it will direct them to login after hitting submit on profile (instead of taking them to user page/results)
+    #and it will NOT add the profile form data to the DB.
+
     if not user_id:
         flash("User does not exist. Please try again")
         return redirect("/login")
-    # print '\n\n\nhi  3\n\n\n'
+    print '\n\n\nhi  3\n\n\n'
     user = User.query.get(user_id)
-    scores_for_user_answers = [skin_type, age, location, weather, acne, aging, blackheads, dryness, oiliness, redness, scars, sensitivity, sun]
-    user_score = 0
-    for i in scores_for_user_answers:
-        user_score += i
+
+    #weight types to see which is scored higher?
+
+
+    # scores_for_user_answers = [skin_type, age, location, weather, acne, aging, blackheads, dryness, oiliness, redness, scars, sensitivity, sun]
+    # user_score = 0
+    # for i in scores_for_user_answers:
+    #     user_score += i
 
         # create age, location & weather answer key
         # age_answer_key = {'under_18': 1} key = string related to form, value = value for that answer twd the score
 
     # user_answers = {'skin_type': skin_type, 'age': age, 'location': location, 'weather': weather}
     # #calculate here
+
+#dictionary with all 9 specialties/types as the keys and the values as 0 for each (for now)
+    specialties = {
+        1: 0,  # "the happy person/kathy"
+        2: 0,
+        3: 0,
+        4: 0,
+        5: 0,
+        6: 0,
+        7: 0,
+        8: 0,
+        9: 0, }
+
+    if oiliness:
+        specialties[3] += 1
+
+    if oiliness and age == '19-29':
+        specialties[2] += 3
+
+    print specialties
+
+    sorted_specialties = sorted(specialties.items(), key=operator.itemgetter(1))
+    print sorted_specialties
+
+#go through all the info in the profile form and increment all 9 types based upon info
+#when I'm done, the values will be an integer. then sort the "specialties" dict above
+#to get the highest value for each. that highest value for each will be my "specialty/type",
+#I can then direct the user twd their specialty/type
+
+#weight every answer and set it to specialty
+    # if oily:
+    #     specialties[1] += 1
+
+    # if combination:
+    #     specialties[2] += 1
+
+    # if normal:
+    #     specialties[3] += 1
+
+    # if dry:
+    #     specialties[4] += 1
+
+    # if dehydrated:
+    #     specialties[5] += 1
+
+    # if sensitive:
+    #     specialties[6] += 1
+
+
+            #at the very end go through dict and find value that is highest, that will be end user's specialty
+            #sort dictionary at the end -- gives me specialyt # at the very end, assign it to the user, then save
 
     # skin_type_answers = {
     #     'oily': 1 # 1 is the value of that answer for that question. when all values are added it = specialty/type
@@ -167,8 +234,8 @@ def profile_process():
     user.age = age
     user.location = location
     user.weather = weather
-    db.session.add(user)
-    # print '\n\n\nhi  4\n\n\n'
+    # db.session.add(user)
+    print '\n\n\nhi  4\n\n\n'
    # new_profile = User(skin_type=skin_type, age=age, location=location, weather=weather)
 
     # concern = Concern.query.filter_by(concern_name=concern_name.lower()).all()
@@ -205,130 +272,24 @@ def profile_process():
         sun = User_Concern(user_id=user_id, concern_id=9)
         db.session.add(sun)
 
+
+    #dict w/all types as keys, values as 0 to start, go thru info in form, and 
+    #based on info increment all 9 types, once i'm done values will be some 
+    #integer and I'll sort to get highest value, highest value will be my 
+    #specialty type, I can direct user to specialty type
+
+    print "assigning user specialty", sorted_specialties[0][1]
+    user.specialty_id = sorted_specialties[0][1]
+    db.session.add(user)
     db.session.commit()
 
     flash("Profile submitted.")
-    return redirect("/specialties/<int:specialty_id>")
-
-"""Route to page that shows single user's profile results."""
+    return redirect("/users/<int:user_id>")
 
 
-@app.route("/specialties/<int:specialty_id>", methods=['GET'])
-def profile_results(specialty_id):
-    """Show user's profile results (specialty)."""
-
-    specialty = Specialty.query.get(specialty_id)
-    return render_template("specialty.html", specialty=specialty)
-
-#     user_id = session.get("user_id")
-#     profile_score = session.get("profile_score")
-
-    # Here is where I will define what profile scores = each type.
-    # e.g. if profile_score < 50 and > 40:
-    #           specialty_name = type 5
-
-#     if profile_score
-
-
-#     if user_id:
-#         user_rating = Rating.query.filter_by(
-#             movie_id=movie_id, user_id=user_id).first()
-
-#     else:
-#         user_rating = None
-
-#     Get average rating of movie
-
-#     rating_scores = [r.score for r in movie.ratings]
-#     avg_rating = float(sum(rating_scores)) / len(rating_scores)
-
-#     prediction = None
-
-
-# @app.route("/movies/<int:movie_id>", methods=['POST'])
-# def rate_movie(movie_id):
-
-#     score = int(request.form["score"])
-
-#     user_id = session.get("user_id")
-#     if not user_id:
-#         raise Exception("You are not logged in.")
-
-#     rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
-
-#     if rating:
-#         rating.score = score
-#         flash ("Your rating has been updated!")
-
-#     else:
-#         rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
-#         flash("Your rating has been added!")
-#         db.session.add(rating)
-
-#     db.session.commit()
-
-#     return redirect("/movies/%s" % movie_id)
-
-"""Route to page that shows single movie's profile. Also checks to see if
-user is logged in, has reviewed movie yet, etc."""
-# @app.route("/movies/<int:movie_id>", methods=['GET'])
-# def movie_detail(movie_id):
-
-
-#     movie = Movie.query.get(movie_id)
-
-#     user_id = session.get("user_id")
-
-#     if user_id:
-#         user_rating = Rating.query.filter_by(
-#             movie_id=movie_id, user_id=user_id).first()
-
-#     else:
-#         user_rating = None
-
-    # Get average rating of movie
-
-    # rating_scores = [r.score for r in movie.ratings]
-    # avg_rating = float(sum(rating_scores)) / len(rating_scores)
-
-    # prediction = None
-
-
-# @app.route("/movies/<int:movie_id>", methods=['POST'])
-# def rate_movie(movie_id):
-
-#     score = int(request.form["score"])
-
-#     user_id = session.get("user_id")
-#     if not user_id:
-#         raise Exception("You are not logged in.")
-
-#     rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
-
-#     if rating:
-#         rating.score = score
-#         flash ("Your rating has been updated!")
-
-#     else:
-#         rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
-#         flash("Your rating has been added!")
-#         db.session.add(rating)
-
-#     db.session.commit()
-
-#     return redirect("/movies/%s" % movie_id)
-
-
-"""Route to page that shows list of users."""
-# @app.route("/users")
-# def user_list():
-#     """Show list of users."""
-
-#     users = User.query.all()
-#     return render_template("user_list.html", users=users)
-
-
-"""Route to page that shows user profile."""
+"""Route to page that shows user profile with profile results (specialty). 
+Profile submit button always brings you here, whether it is your 1st time 
+filling out the form or your 10th. """
 
 
 @app.route("/users/<int:user_id>")
@@ -338,95 +299,6 @@ def user_detail(user_id):
     user = User.query.get(user_id)
     return render_template("user.html", user=user)
 
-    """Route to page that shows list of all specialties."""
-# @app.route("/specialties")
-# def specialty_list():
-#     """Show list of all specialties."""
-
-#     specialty = Specialty.query.order_by(Specialty.specialty_name).all()
-
-
-#     return render_template("specialty_list.html", specialties=specialties)
-
-"""Route to page that shows single specialty profile."""
-# @app.route("/specialties/<int:specialty_id>")
-# def specialty_detail(specialty_id):
-#     """Show specialty profile."""
-
-#     specialty = Specialty.query.get(specialty_id)
-#     return render_template("specialty.html", specialty=specialty)
-
-
-"""Route to page that shows list of product_categories."""
-# @app.route("/product_categories")
-# def product_category_list():
-#     """Show list of product_categories."""
-
-#     product_category = Product_Category.query.order_by(Product_Category.product_category_name).all()
-
-
-#     return render_template("product_category_list.html", product_categories=product_categories)
-
-
-"""Route to page that shows a product category's list of real products."""
-# @app.route("/real_product_list")
-# def real_product_list():
-#     """Show list of real-life products that fit into that product category"""
-
-#     product = Product.query.order_by(Product.product_name).all()
-
-
-#     return render_template("real_product_list.html", products=products)
-
-
-"""Route to page that shows single movie's profile. Also checks to see if
-user is logged in, has reviewed movie yet, etc."""
-# @app.route("/movies/<int:movie_id>", methods=['GET'])
-# def movie_detail(movie_id):
-
-
-#     movie = Movie.query.get(movie_id)
-
-#     user_id = session.get("user_id")
-
-#     if user_id:
-#         user_rating = Rating.query.filter_by(
-#             movie_id=movie_id, user_id=user_id).first()
-
-#     else:
-#         user_rating = None
-
-    # Get average rating of movie
-
-    # rating_scores = [r.score for r in movie.ratings]
-    # avg_rating = float(sum(rating_scores)) / len(rating_scores)
-
-    # prediction = None
-
-
-# @app.route("/movies/<int:movie_id>", methods=['POST'])
-# def rate_movie(movie_id):
-
-#     score = int(request.form["score"])
-
-#     user_id = session.get("user_id")
-#     if not user_id:
-#         raise Exception("You are not logged in.")
-
-#     rating = Rating.query.filter_by(user_id=user_id, movie_id=movie_id).first()
-
-#     if rating:
-#         rating.score = score
-#         flash ("Your rating has been updated!")
-
-#     else:
-#         rating = Rating(user_id=user_id, movie_id=movie_id, score=score)
-#         flash("Your rating has been added!")
-#         db.session.add(rating)
-
-#     db.session.commit()
-
-#     return redirect("/movies/%s" % movie_id)
 
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
