@@ -49,7 +49,7 @@ def register_process():
     db.session.commit()
 
     #browser/cookie storing session
-    session["user_id"] = user.user_id
+    session["user_id"] = new_user.user_id
 
     flash("User %s added." % email)
 
@@ -132,34 +132,31 @@ def profile_process():
     oiliness = request.form.get("oiliness")
     scars = request.form.get("scars")
 
-
-
-    #weight types to see which is scored higher?
-
-
-    # scores_for_user_answers = [skin_type, age, location, weather, acne, aging, blackheads, dryness, oiliness, redness, scars, sensitivity, sun]
-    # user_score = 0
-    # for i in scores_for_user_answers:
-    #     user_score += i
-
-        # create age, location & weather answer key
-        # age_answer_key = {'under_18': 1} key = string related to form, value = value for that answer twd the score
-
-    # user_answers = {'skin_type': skin_type, 'age': age, 'location': location, 'weather': weather}
-    # #calculate here
-
 #dictionary with all 4 beauty types as the keys and the values as 0 for each (for now)
     beauty_types = {
-        1: 0,  # "the happy person/kathy"
-        2: 0,
-        3: 0,
-        4: 0,}
+        1: 0,  # oily (dewdrop)
+        2: 0,  # combination
+        3: 0,  # normal
+        4: 0, }  # dry
 
-    if oiliness:
-        beauty_types[7] += 40
+    if skin_type == "oily":
+        beauty_types[1] += 10
 
-    if oiliness and age == '19-29':
-        beauty_types[2] += 50
+    if acne == "true":
+        beauty_types[1] += 5
+
+    if aging == "true":
+        beauty_types[1] += 5
+
+    if oiliness == "true":
+        beauty_types[1] += 5
+
+    if dullness == "true":
+        beauty_types[4] += 100
+
+    if skin_type == "dry":
+        beauty_types[2] += 10
+
 
     print beauty_types
 
@@ -233,8 +230,8 @@ def profile_process():
     #integer and I'll sort to get highest value, highest value will be my 
     #beauty type, I can direct user to beauty type
 
-    print "assigning beauty type", sorted_beauty_types[0][1]
-    user.beauty_type_id = sorted_beauty_types[0][1]
+    print "assigning beauty type", sorted_beauty_types[-1][0]
+    user.beauty_type_id = sorted_beauty_types[-1][0]
     db.session.add(user)
     db.session.commit()
 

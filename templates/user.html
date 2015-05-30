@@ -4,7 +4,7 @@
 <h2>User Details</h2>
 
 <p>Hi {{ user.firstname }} {{ user.lastname }}, your results are in. 
-  You are a (user's specialty based on profile results goes here)!</p>
+  You are a {{ user.beauty_type_id }}!</p>
 
    <ul>
         <li>User ID: {{ user.user_id }}</li>
@@ -13,10 +13,6 @@
         <li>Zipcode: {{ user.zipcode }}</li><br>
 
         <li>Skin Type: {{ user.skin_type }}</li>
-<!--         <li>Age: {{ user.age }}</li> -->
-        <li>Location Type: {{ user.location }}</li>
-        <li>Weather Type: {{ user.weather }}</li>
-
     </ul>
 
   <h4><a href = "/">Return to Homepage</a></h4>
