@@ -1,17 +1,23 @@
-
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2>Product Categories</h2><br>
-    <p>Separated by type:</p><br>
+    <h2>{{ product_category.product_category_name }}</h2><br>
+    <p>This is a list of products that match the beauty type & product category indicated.
+      So Beauty Type 1, Product Category 4 would be a list of Essences meant for Oily skin</p>
+
+      LIST OF REAL PRODUCTS
+
+
     <ul>
-      {% for product_category in product)categories %}
+      {% for product in products %}
           <li>
-              <a href="/product_categories/{{ product_category.product_category_id }}">
-                {{ product_category.product }}
+              <a href="/product/{{ product.product_id }}">
+                {{ product.product_brand }} {{ product.product_name }}
               </a>
           </li>
       {% endfor %}
     </ul>
+    
+  <h4><a href = "/">Return to Homepage</a></h4>
 
 {% endblock %}

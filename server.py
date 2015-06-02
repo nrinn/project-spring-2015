@@ -3,7 +3,7 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Beauty_Type_Category, Product_Category, Product, Rating
+from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
 import operator
 
 app = Flask(__name__)
@@ -59,12 +59,14 @@ def register_process():
 
 @app.route('/login', methods=['GET'])
 def login_form():
+    """Show form for user login"""
 
     return render_template("login_form.html")
 
 
 @app.route('/login', methods=['POST'])
 def login_process():
+    """Process login"""
 
     email = request.form["email"]
     password = request.form["password"]
@@ -89,6 +91,7 @@ def login_process():
 
 @app.route('/logout')
 def logout():
+    """Logs user out, redirects to Homepage"""
 
     del session["user_id"]
     flash("You have logged out.")
@@ -97,6 +100,7 @@ def logout():
 
 @app.route('/profile', methods=['GET'])
 def profile_form():
+    """Show form for user profile."""
 
     user_id = session.get("user_id")
 
@@ -111,6 +115,7 @@ def profile_form():
 
 @app.route('/profile', methods=['POST'])
 def profile_process():
+    """Process profile form - assigning & returning user's Beauty Type"""
 
     user_id = session.get("user_id")
 
@@ -157,48 +162,11 @@ def profile_process():
     if skin_type == "dry":
         beauty_types[2] += 10
 
-
     print beauty_types
 
     sorted_beauty_types = sorted(beauty_types.items(), key=operator.itemgetter(1))
     print sorted_beauty_types
 
-#go through all the info in the profile form and increment all 9 types based upon info
-#when I'm done, the values will be an integer. then sort the "beauty_types" dict above
-#to get the highest value for each. that highest value for each will be my "beauty type",
-#I can then direct the user twd their beauty type.
-
-#weight every answer and set it to beauty type.
-
-
-#at the very end go through dict and find value that is highest, that will be end user's beauty type
-#sort dictionary at the end -- gives me beauty type # at the very end, assign it to the user, then save
-
-    # skin_type_answers = {
-    #     'oily': 1 # 1 is the value of that answer for that question. when all values are added it = beauty type
-    # }
-
-    # age_answers = {
-    #     'under_18': 1
-    # }
-
-    # location_answers = {
-    #     'urban': 1
-    # }
-
-    # weather_answers = {
-    #     'humid': 1
-    # }
-
-    # answer_key = {'skin_type': skin_type_answers, 'age': age_answers, 'location': location_answers, 'weather': weather_answers}
-    # user_score = 0
-    # for answer in user_answers.iteritems(): #iteritems = can do a for loop over a dict
-    #     score_for_this_question = answer_key[answer[0]][answer[1]]
-    #     user_score += score_for_this_question
-    #     # goes through all answers and adds value for each answer to user_score
-
-   # update, don't create, use . syntax:
-   # user.skintype = thing from form, for stuff on user table it all gets added once b/c it is once per object
     user.skin_type = skin_type
 
     # deletes any row in user_concern table mapping this user to that concern, clears out info from uc table
@@ -239,17 +207,105 @@ def profile_process():
     return redirect("/users/%s" % user.user_id)
 
 
-"""Route to page that shows user profile with profile results (beauty type). 
-Profile submit button always brings you here, whether it is your 1st time 
-filling out the form or your 10th. """
-
-
 @app.route("/users/<int:user_id>")
 def user_detail(user_id):
-    """Show user profile."""
+    """Show user profile - linked from profile sumbission, and login submission."""
 
     user = User.query.get(user_id)
+
     return render_template("user.html", user=user)
+
+
+@app.route("/beauty_type/<int:beauty_type_id>")
+def beauty_type_results(beauty_type_id):
+    """Shows results of profile form, the Beauty Type assigned to the user. Linked from user.html (after they fill out profile form)"""
+    """Includes a list of Product Categories sorted by the Beauty Type passed."""
+    # finds all product categories related to beauty_type_id (which is all of them)
+
+    beauty_type = Beauty_Type.query.get(beauty_type_id)
+    product_categories = Product_Category.query.order_by(Product_Category.product_category_id).all()
+
+    return render_template("beauty_type.html", product_categories=product_categories, beauty_type=beauty_type)
+
+
+@app.route("/product_list/<int:beauty_type_id>/<int:product_category_id>")
+def product_list(product_category_id, beauty_type_id):
+    """Show list of real life Products, sorted by the Product Category & Beauty Type passed. Linked from beauty_type.html."""
+
+    beauty_type = Beauty_Type.query.get(beauty_type_id)
+    product_category = Product_Category.query.get(product_category_id)
+    products = Product.query.order_by(Product.product_name).all()
+    return render_template("product_categories.html", beauty_type=beauty_type, product_category=product_category, products=products)
+
+
+@app.route("/product/<int:product_id>", methods=['GET'])
+def product_detail(product_id):
+    """Show individual Product details. Linked from product_categories.html."""
+
+    product = Product.query.get(product_id)
+    user_id = session.get("user_id")
+
+    if user_id:
+        user_rating = Rating.query.filter_by(
+            product_id=product_id, user_id=user_id).first()
+
+    else:
+        user_rating = None
+
+    # Get average rating of product
+
+    rating_scores = [r.score for r in product.ratings]
+    avg_rating = float(sum(rating_scores)) / len(rating_scores)
+
+    prediction = None
+
+    # Prediction code: only predict if the user hasn't rated it yet.
+
+    # if (not user_rating) and user_id:
+    #     user = User.query.get(user_id)
+    #     if user:
+    #         prediction = user.predict_rating(product)
+
+    # # Either use the prediction or their real rating
+
+    # if prediction:
+    #     # User hasn't scored; use our prediction if we made one
+    #     effective_rating = prediction
+
+    # elif user_rating:
+    #     # User has already scored for real; use that
+    #     effective_rating = user_rating.score
+
+    # else:
+    #     # User hasn't scored, and we couldn't get a prediction
+    #     effective_rating = None
+
+    return render_template("product_detail.html", product=product, user_rating=user_rating, average=avg_rating, prediction=prediction)
+
+
+@app.route("/product/<int:product_id>", methods=['POST'])
+def rate_product(product_id):
+
+    score = int(request.form["score"])
+
+    user_id = session.get("user_id")
+    if not user_id:
+        raise Exception("You are not logged in.")
+
+    rating = Rating.query.filter_by(user_id=user_id, product_id=product_id).first()
+
+    if rating:
+        rating.score = score
+        flash("Your rating has been updated!")
+
+    else:
+        rating = Rating(user_id=user_id, product_id=product_id, score=score)
+        flash("Your rating has been added!")
+        db.session.add(rating)
+
+    db.session.commit()
+
+    return redirect("/product/%s" % product_id)
 
 
 if __name__ == "__main__":

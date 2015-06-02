@@ -57,6 +57,48 @@ class User_Concern(db.Model):
 
         return "<User_Concern user_concern_id=%s user_id=%s concern_id=%s>" % (self.user_concern_id, self.user_id, self.concern_id)
 
+    # def similarity(self, other):
+    # # """Return Pearson rating for user compared to other user."""
+
+    #     u_ratings = {}
+    #     paired_ratings = []
+
+    #     for r in self.ratings:
+    #         u_ratings[r.product_id] = r
+
+    #     for r in other.ratings:
+    #         u_r = u_ratings.get(r.product_id)
+    #         if u_r:
+    #             paired_ratings.append( (u_r.score, r.score) )
+
+    #     if paired_ratings:
+    #         return correlation.pearson(paired_ratings)
+
+    #     else:
+    #         return 0.0
+
+    # def predict_rating(self, product):
+    #     # """Predict user's rating of a product."""
+
+    #     other_ratings = product.ratings
+
+    #     similarities = [
+    #         (self.similarity(r.user), r)
+    #         for r in other_ratings
+    #     ]
+
+    #     similarities.sort(reverse=True)
+
+    #     similarities = [(sim, r) for sim, r in similarities if sim > 0]
+
+    #     if not similarities:
+    #         return None
+
+    #     numerator = sum([r.score * sim for sim, r in similarities])
+    #     denominator = sum([sim for sim, r in similarities])
+
+    #     return numerator/denominator
+
 
 class Concern(db.Model):
     """Concerns from profile form - user may select up to 3."""
@@ -86,31 +128,10 @@ class Beauty_Type(db.Model):
         return "<Beauty_Type beauty_type_id=%s beauty_type_name=%s>" % (self.beauty_type_id, self.beauty_type_name)
 
 
-class Beauty_Type_Category(db.Model):
-    """Beauty_Type/Product_Category Association Table."""
-
-    __tablename__ = "beauty_type_categories"
-
-    beauty_type_category_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    beauty_type_id = db.Column(db.Integer, db.ForeignKey('beauty_types.beauty_type_id'))
-    product_category_id = db.Column(db.Integer, db.ForeignKey('product_categories.product_category_id'))
-
-    # Define relationship to beauty_type
-    beauty_type = db.relationship("Beauty_Type", backref=db.backref('beauty_type_categories', order_by=beauty_type_category_id))
-
-    # Define relationship to product_category
-    product_category = db.relationship('Product_Category', backref=db.backref('beauty_type_categories', order_by=beauty_type_category_id))
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Beauty_Type_Category beauty_type_category_id=%s>" % (self.beauty_type_category_id)
-
-
 class Product_Category(db.Model):
     __tablename__ = "product_categories"
 
-    """General categories of various products."""
+    """General categories of products as passed by assigned beauty type."""
 
     product_category_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     product_category_name = db.Column(db.String(64), nullable=True)
@@ -128,18 +149,21 @@ class Product(db.Model):
     """Specific, real life products that fit in to each Product_Category"""
 
     product_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    product_brand = db.Column(db.String(64), nullable=True)
     product_name = db.Column(db.String(64), nullable=True)
     price = db.Column(db.Integer)
     description = db.Column(db.String(1000), nullable=True)
+    beauty_type_id = db.Column(db.Integer, db.ForeignKey('beauty_types.beauty_type_id'))
     product_category_id = db.Column(db.Integer, db.ForeignKey('product_categories.product_category_id'))
 
+    beauty_type = db.relationship('Beauty_Type', backref=db.backref('products', order_by=product_id))
     product_category = db.relationship('Product_Category', backref=db.backref('products', order_by=product_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Product product_id=%s sku=%s  product_name=%s price=%s description=%s product_category_id=%s>" % (
-            self.product_id, self.sku, self.product_name, self.price, self.description, self.product_category_id)
+        return "<Product product_id=%s sku=%s product_brand=%s product_name=%s price=%s description=%s beauty_type_id=%s product_category_id=%s>" % (
+            self.product_id, self.sku, self.product_brand, self.product_name, self.price, self.description, self.beauty_type_id, self.product_category_id)
 
 
 class Rating(db.Model):
