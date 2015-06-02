@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h2>{{ product.product_brand }} {{ product.product_name }}</h2><br>
+
+    <ul>
+        <li>Brand: {{ product.product_brand }}</li>
+        <li>Name: {{ product.product_name }}</li>
+        <li>Price: ${{ product.price }}</li>
+        <li>Description: {{ product.description }}</li>
+    </ul><br>
+
+    <p>This product is recommended for those with the:
+    <ul>
+        <li>Beauty Type: {{ product.beauty_type_id }}</li>
+        <li>Product Category: {{ product.product_category_id }}</li>
+    </ul><br>
+
+    <p>This product can be helpful for those with the following concerns:
+    <ul>
+    </ul><br>
+
+  <h4><a href = "/">Return to Homepage</a></h4>
+
+{% endblock %}
