@@ -10,51 +10,69 @@
         <li>Description: {{ product.description }}</li>
     </ul><br>
 
-    <p>This product is recommended for those with the:
+    <p>This product is recommended for:
     <ul>
         <li>Beauty Type: {{ product.beauty_type_id }}</li>
-        <li>Product Category: {{ product.product_category_id }}</li>
+        <li>Product Category: {{ product.product_category_id }}</li><br>
+        <p>It has an average user rating of: {{ average }}</p>
     </ul><br>
 
     <p>This product can be helpful for those with the following concerns:
     <ul>
     </ul><br>
 
+        <h2>Ratings</h2>
     </ul>
-      <form action="/product/{{ product.product_id }}" method="POST">
-    Rate this product:
-    <select name="score">
-      <option value=1>1</option>
-      <option value=2>2</option>
-      <option value=3>3</option>
-      <option value=4>4</option>
-      <option value=5>5</option>
-    </select>
-    <input type="submit" value="Rate It!">
-    </form>
+<form action="/product/{{ product.product_id }}" method="POST">
+     
+     <div class="form-group">
+        <label>
+            Rate this product:
+            <select name="score">
+              <option value=1>1</option>
+              <option value=2>2</option>
+              <option value=3>3</option>
+              <option value=4>4</option>
+              <option value=5>5</option>
+            </select>
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label>
+            Comment
+                <input type="text" name="comment_statement" class="form-control">
+        </label>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Submit" class="btn btn-danger">
+    </div>
+
+</form>
+
 
      {% if "user_id" in session %}
         {% if user_rating %}
-        <p><b>You currently rate this product as a {{ user_rating.score }}.</b></p>
+        <ul><li>You currently rate this product as a {{ user_rating.score }}.</li>
+    {% endif %}
+        {% if user_comment %}
+        <li>On (date here) you said: {{ user_comment.comment_statement }}.</li></ul>
     {% endif %}
   {% endif %}
-
-    <p><b>Average rating:</b> {{ average }}</p>
-    <!-- {% if prediction %}
-      <p>We predict you will rate this product {{ prediction }}.</p>
-    {% endif %} -->
-
-        {% if product.ratings %}
-        <h2>Ratings</h2>
+<br>
+    {% if product.ratings %}
+        {% if product.comments %}
         <ul>
         {% for rating in product.ratings %}
+            {% for comment in product.comments %}
             <li>
-                User #<b><em> <a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a></em></b> 
-         gave this product a rating of: {{ rating.score }}
+                User #<a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a>
+         gave this product a rating of: {{ rating.score }} and said {{ comment.comment_statement }}
             </li>
+            {% endfor %}
         {% endfor %}
-        </ul>
-    {% endif %}
+            {% endif %}
+        {% endif %}
 
   <h4><a href = "/">Return to Homepage</a></h4>
 

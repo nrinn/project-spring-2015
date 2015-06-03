@@ -189,6 +189,29 @@ class Rating(db.Model):
             self.rating_id, self.product_id, self.user_id, self.score)
 
 
+class Comment(db.Model):
+    __tablename__ = "comments"
+
+    """Users can comment on many products. Products can be commented on by many users (and have many comments)."""
+
+    comment_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
+    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
+    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    comment_statement = db.Column(db.String(1000), nullable=True)
+
+     # Define relationship to user
+    user = db.relationship('User', backref=db.backref('comments', order_by=comment_id))
+
+    # Define relationship to product
+    product = db.relationship('Product', backref=db.backref('comments', order_by=comment_id))
+
+    def __repr__(self):
+        """Provide helpful representation when printed."""
+
+        return "<Comment comment_id=%s product_id=%s user_id=%s comment=%s>" % (
+            self.comment_id, self.product_id, self.user_id, self.comment_statement)
+
+
 ##############################################################################
 # Helper functions
 def connect_to_db(app):

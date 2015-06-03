@@ -29,6 +29,17 @@ DELETE FROM products;
 INSERT INTO products VALUES
 (NULL, "LeeJiHam", "Tea Tree 90 Essence", 40, "An age-old remedy for a spectrum of skin conditions including acne and eczema, tea tree oil reduces redness, soothes, and rejuvinates the skin. Formulated with 90% natural tea tree extract, you can feel its power of revitalization as Tea Tree 90 Essence alleviates uneven skin tone, minimizes redness, refreshes the skin, and improves overall complexion. With over 800x more Vitamin C than an apple, your skin will thank you for the invigorating treatment that leaves it rejuvinated and radiant.", 1, 4);
 
+DELETE FROM users;
+INSERT INTO users VALUES
+(NULL, "jessica@gmail.com", "mypass", "Jessica", "Simpson", "90210", 1, "Oily"),
+(NULL, "britney@gmail.com", "mypass", "Britney", "Spears", "90210", 1, "Oily");
+
 DELETE FROM ratings;
 INSERT INTO ratings VALUES
-(NULL, 1, 1, 5);
+(NULL, 1, 1, 5),
+(NULL, 1, 2, 1);
+
+DELETE FROM comments;
+INSERT INTO comments VALUES
+(NULL, 1, 1, "I love this stuff. Helps with everything!"),
+(NULL, 1, 2, "I hate this stuff. Makes everything worse!");

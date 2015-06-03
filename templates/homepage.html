@@ -1,11 +1,12 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h1>Glow Petite</h1><br>
-<p>A skin care resource application.</p><br>
+<h1>Snail Love</h1><br>
+<p>A Korean cosmetics skin care resource application.</p><br>
 
 <p>Existing Users: <a href = "/login">Login</a></p><br>
 <p>New Users: <a href = "/register">Register Here</a></p><br>
-<p>Profile: <a href = "/profile">Fill Out Profile Form</a></p><br>
+<p>Get Your Beauty Type: <a href = "/profile">Fill Out The Profile Form</a></p><br>
+<p>Profile: <a href = "/users/{{ user.user_id }}">Your User Profile</a></p><br>
 
 {% endblock %}

@@ -3,7 +3,7 @@
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
+from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating, Comment
 import operator
 
 app = Flask(__name__)
@@ -21,7 +21,11 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    return render_template('homepage.html')
+    user_id = session.get("user_id")
+
+    user = User.query.get(user_id)
+
+    return render_template('homepage.html', user=user)
 
 
 @app.route('/register', methods=['GET'])
@@ -240,10 +244,18 @@ def product_list(product_category_id, beauty_type_id):
 
 @app.route("/product/<int:product_id>", methods=['GET'])
 def product_detail(product_id):
-    """Show individual Product details. Linked from product_categories.html."""
+    """Show individual Product details. Allow user to rate & comment. Display ratings & comments from other users."""
 
     product = Product.query.get(product_id)
     user_id = session.get("user_id")
+
+    # Get average rating of product
+
+    rating_scores = [r.score for r in product.ratings]
+    avg_rating = float(sum(rating_scores)) / len(rating_scores)
+
+    #Get the user's product rating if they have already rated it.
+    #Else, don't show a rating.
 
     if user_id:
         user_rating = Rating.query.filter_by(
@@ -252,47 +264,30 @@ def product_detail(product_id):
     else:
         user_rating = None
 
-    # Get average rating of product
+    #Get the user's product comment if they have already commented on it.
+    #Else, don't show a comment.
 
-    rating_scores = [r.score for r in product.ratings]
-    avg_rating = float(sum(rating_scores)) / len(rating_scores)
+    if user_id:
+        user_comment = Comment.query.filter_by(product_id=product_id, user_id=user_id).first()
 
-    prediction = None
+    else:
+        user_comment = None
 
-    # Prediction code: only predict if the user hasn't rated it yet.
-
-    # if (not user_rating) and user_id:
-    #     user = User.query.get(user_id)
-    #     if user:
-    #         prediction = user.predict_rating(product)
-
-    # # Either use the prediction or their real rating
-
-    # if prediction:
-    #     # User hasn't scored; use our prediction if we made one
-    #     effective_rating = prediction
-
-    # elif user_rating:
-    #     # User has already scored for real; use that
-    #     effective_rating = user_rating.score
-
-    # else:
-    #     # User hasn't scored, and we couldn't get a prediction
-    #     effective_rating = None
-
-    return render_template("product_detail.html", product=product, user_rating=user_rating, average=avg_rating, prediction=prediction)
+    return render_template("product_detail.html", product=product, user_rating=user_rating, user_comment=user_comment, average=avg_rating)
 
 
 @app.route("/product/<int:product_id>", methods=['POST'])
 def rate_product(product_id):
 
     score = int(request.form["score"])
+    comment_statement = request.form["comment_statement"]
 
     user_id = session.get("user_id")
     if not user_id:
         raise Exception("You are not logged in.")
 
     rating = Rating.query.filter_by(user_id=user_id, product_id=product_id).first()
+    comment = Comment.query.filter_by(user_id=user_id, product_id=product_id).first()
 
     if rating:
         rating.score = score
@@ -303,9 +298,50 @@ def rate_product(product_id):
         flash("Your rating has been added!")
         db.session.add(rating)
 
+    if comment:
+        comment.comment_statement = comment_statement
+        flash("Your comment has been updated!")
+
+    else:
+        comment = Comment(user_id=user_id, product_id=product_id, comment_statement=comment_statement)
+        flash("Your commment has been added!")
+        db.session.add(comment)
+
     db.session.commit()
 
     return redirect("/product/%s" % product_id)
+
+
+# @app.route('/comment', methods=['GET'])
+# def comment_form():
+#     """Show form for product comments."""
+
+#     return render_template("comment_form.html")
+
+
+# @app.route('/comment', methods=['POST'])
+# def comment_process():
+#     """Process comment form."""
+
+#     email = request.form["email"]
+#     password = request.form["password"]
+
+#     user = User.query.filter_by(email=email).first()
+
+#     if not user:
+#         flash("User does not exist. Please try again")
+#         return redirect("/login")
+
+#     if user.password != password:
+#         flash("Password is not correct. Please try again.")
+#         return redirect("/login")
+
+#     session["user_id"] = user.user_id
+
+#     flash("Your comment has been received.")
+
+#     # Takes the user back to the product_detail page they were on.
+#     return redirect("/users/%s" % user.user_id)
 
 
 if __name__ == "__main__":
