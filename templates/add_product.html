@@ -20,7 +20,7 @@
     <div class="form-group">
         <label>
             Price (on average)
-                <input type="float" name="price" class="form-control">
+                <input type="number" name="price" class="form-control">
         </label>
     </div>
     <div class="form-group">
@@ -48,21 +48,10 @@
         <label>
             Select the Beauty Type you feel the product is best suited for:<br>
              <select name="beauty_type" class="form-control">
-                <option value="Dewdrop">Dewdrop</option>
-                <option value="Combination">Combination</option>
-                <option value="Normal">Normal</option>
-                <option value="Dry">Dry</option>
-            </select>
-        </label>
-    </div>
-    <div class="form-group">
-        <label>
-            Select the Skin Type you feel the product is best suited for:<br>
-             <select name="skin_type" class="form-control">
-                <option value="Oily">Oily. Typically produces oil on most areas of the face.</option>
-                <option value="Combination">Combination. May produce oil on certain areas of the face and be dry in others.</option>
-                <option value="Normal">Normal. Skin is neither particularly dry nor particularly oil in most areas.</option>
-                <option value="Dry">Dry. Skin is dry on most or all of face.</option>
+                <option value="Dewdrop">Dewdrop: Typically produces oil on most areas of the face.</option>
+                <option value="Combination">Combination: May produce oil on certain areas of the face and be dry in others.</option>
+                <option value="Normal">Normal: Skin is neither particularly dry nor particularly oil in most areas.</option>
+                <option value="Dry">Dry: Skin is dry on most or all of face.</option>
             </select>
         </label>
     </div>
@@ -76,7 +65,6 @@
                 <option value="Dullness">Dullness</option>
                 <option value="Oiliness">Oiliness</option>
                 <option value="Scars">Scars or Discoloration</option>
-                <option value="None">None of the above (please see comments)</option>
             </select>
         </label>
     </div>

@@ -21,13 +21,13 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    user_id = session.get("user_id")
+    # user_id = session.get("user_id")
 
-    if not user_id:
-        return redirect("/login")
-    else:
-        user = User.query.get(user_id)
-        return render_template('homepage.html', user=user)
+    # if not user_id:
+    #     return redirect("/login")
+    # else:
+    #     user = User.query.get(user_id)
+    return render_template('homepage.html')  #user=user
 
 
 @app.route('/register', methods=['GET'])
@@ -338,32 +338,37 @@ def add_product_form():
 @app.route('/add_product', methods=['POST'])
 def add_product_process():
     """Process form for adding products to the DB."""
-    print request.form
+    # print request.form
 
-    user_id = session.get("user_id")
+    # user_id = session.get("user_id")
 
-    if not user_id:
-        flash("User does not exist. Please try again")
-        return redirect("/login")
+    # if not user_id:
+    #     flash("User does not exist. Please try again")
+    #     return redirect("/login")
 
-    user = User.query.get(user_id)
+    # user = User.query.get(user_id)
 
+    # Get add_product form variables
     product_brand = request.form.get("product_brand")
     product_name = request.form.get("product_name")
-    price = request.form.get("price")
+    price = int(request.form.get("price"))
     description = request.form.get("description")
     product_category = request.form.get("product_category")
     beauty_type = request.form.get("beauty_type")
-    skin_type = request.form.get("skin_type")
     concern = request.form.get("concern")
 
-    product = Product(product_brand=product_brand, product_name=product_name, price=price, description=description, product_category=product_category, beauty_type=beauty_type, skin_type=skin_type, concern=concern)
+    new_product = Product(product_brand=product_brand, product_name=product_name, price=price, description=description, product_category=product_category, beauty_type=beauty_type, concern=concern)
 
-    db.session.add(product)
+    # Adds the new product to the database. Session of connection to DB.
+    db.session.add(new_product)
     db.session.commit()
 
-    flash("Your Product Submission Has Been Received.")
-    return redirect("/users/%s" % user.user_id)
+    # Browser/cookie storing session
+    session["product_id"] = new_product.product_id
+
+    flash("Your product submission has been received. Thank you!")
+    return redirect("/profile")
+    # return redirect("/users/%s" % user.user_id)
 
 
 if __name__ == "__main__":

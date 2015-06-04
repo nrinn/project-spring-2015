@@ -123,8 +123,8 @@ class Product(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Product product_id=%s sku=%s product_brand=%s product_name=%s price=%s description=%s beauty_type_id=%s product_category_id=%s>" % (
-            self.product_id, self.sku, self.product_brand, self.product_name, self.price, self.description, self.beauty_type_id, self.product_category_id)
+        return "<Product product_id=%s product_brand=%s product_name=%s price=%s description=%s beauty_type_id=%s product_category_id=%s>" % (
+            self.product_id, self.product_brand, self.product_name, self.price, self.description, self.beauty_type_id, self.product_category_id)
 
 
 class Rating(db.Model):
