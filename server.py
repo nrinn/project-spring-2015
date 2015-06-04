@@ -1,9 +1,9 @@
-"""Snail Love"""
+"""GlowBB"""
 
 from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating, Comment
+from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
 import operator
 
 app = Flask(__name__)
@@ -23,9 +23,11 @@ def index():
 
     user_id = session.get("user_id")
 
-    user = User.query.get(user_id)
-
-    return render_template('homepage.html', user=user)
+    if not user_id:
+        return redirect("/login")
+    else:
+        user = User.query.get(user_id)
+        return render_template('homepage.html', user=user)
 
 
 @app.route('/register', methods=['GET'])
@@ -112,7 +114,7 @@ def profile_form():
         flash("User must be logged in.")
         return redirect("/login")
 
-    user = User.query.get(user_id)
+    # user = User.query.get(user_id)
 
     return render_template("profile_form.html")
 
@@ -211,13 +213,28 @@ def profile_process():
     return redirect("/users/%s" % user.user_id)
 
 
-@app.route("/users/<int:user_id>")
+@app.route("/users/<int:user_id>", methods=['GET'])
 def user_detail(user_id):
-    """Show user profile - linked from profile sumbission, and login submission."""
+    """Show user profile - linked from profile and login submission."""
+    """Includes info from profile form & Beauty Type if user has taken profile form."""
+    """Show list of any Products the User has Rated, sorted by the User & Product passed."""
 
+    user_id = session.get("user_id")
     user = User.query.get(user_id)
+    # products = Product.query.order_by(Product.product_name).all()
+    # product = Product.query.get(product_id)
 
-    return render_template("user.html", user=user)
+    #Get the user's product rating & comment if they have rated any products.
+    #Else, don't show any product ratings.
+
+    # if user_id:
+    #     user_rating = Rating.query.filter_by(
+    #         product_id=product_id, user_id=user_id).first()
+
+    # else:
+    #     user_rating = None
+
+    return render_template("user.html", user=user)  #products=products, product=product, user_rating=user_rating
 
 
 @app.route("/beauty_type/<int:beauty_type_id>")
@@ -226,10 +243,12 @@ def beauty_type_results(beauty_type_id):
     """Includes a list of Product Categories sorted by the Beauty Type passed."""
     # finds all product categories related to beauty_type_id (which is all of them)
 
+    user_id = session.get("user_id")
+    user = User.query.get(user_id)
     beauty_type = Beauty_Type.query.get(beauty_type_id)
     product_categories = Product_Category.query.order_by(Product_Category.product_category_id).all()
 
-    return render_template("beauty_type.html", product_categories=product_categories, beauty_type=beauty_type)
+    return render_template("beauty_type.html", product_categories=product_categories, beauty_type=beauty_type, user=user)
 
 
 @app.route("/product_list/<int:beauty_type_id>/<int:product_category_id>")
@@ -246,16 +265,16 @@ def product_list(product_category_id, beauty_type_id):
 def product_detail(product_id):
     """Show individual Product details. Allow user to rate & comment. Display ratings & comments from other users."""
 
-    product = Product.query.get(product_id)
     user_id = session.get("user_id")
+    product = Product.query.get(product_id)
 
     # Get average rating of product
 
     rating_scores = [r.score for r in product.ratings]
     avg_rating = float(sum(rating_scores)) / len(rating_scores)
 
-    #Get the user's product rating if they have already rated it.
-    #Else, don't show a rating.
+    #Get the user's product rating & comment if they have already rated it.
+    #Else, don't show a rating & comment.
 
     if user_id:
         user_rating = Rating.query.filter_by(
@@ -264,30 +283,21 @@ def product_detail(product_id):
     else:
         user_rating = None
 
-    #Get the user's product comment if they have already commented on it.
-    #Else, don't show a comment.
-
-    if user_id:
-        user_comment = Comment.query.filter_by(product_id=product_id, user_id=user_id).first()
-
-    else:
-        user_comment = None
-
-    return render_template("product_detail.html", product=product, user_rating=user_rating, user_comment=user_comment, average=avg_rating)
+    return render_template("product_detail.html", product=product, user_rating=user_rating, average=avg_rating)
 
 
 @app.route("/product/<int:product_id>", methods=['POST'])
 def rate_product(product_id):
 
     score = int(request.form["score"])
-    comment_statement = request.form["comment_statement"]
+    comment = request.form["comment"]
 
     user_id = session.get("user_id")
     if not user_id:
         raise Exception("You are not logged in.")
 
     rating = Rating.query.filter_by(user_id=user_id, product_id=product_id).first()
-    comment = Comment.query.filter_by(user_id=user_id, product_id=product_id).first()
+    comment = Rating.query.filter_by(user_id=user_id, product_id=product_id).first()
 
     if rating:
         rating.score = score
@@ -299,11 +309,11 @@ def rate_product(product_id):
         db.session.add(rating)
 
     if comment:
-        comment.comment_statement = comment_statement
+        rating.comment = comment
         flash("Your comment has been updated!")
 
     else:
-        comment = Comment(user_id=user_id, product_id=product_id, comment_statement=comment_statement)
+        comment = Rating(user_id=user_id, product_id=product_id, comment=comment)
         flash("Your commment has been added!")
         db.session.add(comment)
 
@@ -312,36 +322,48 @@ def rate_product(product_id):
     return redirect("/product/%s" % product_id)
 
 
-# @app.route('/comment', methods=['GET'])
-# def comment_form():
-#     """Show form for product comments."""
+@app.route('/add_product', methods=['GET'])
+def add_product_form():
+    """Show form for adding products to DB."""
 
-#     return render_template("comment_form.html")
+    user_id = session.get("user_id")
+
+    if not user_id:
+        flash("User must be logged in.")
+        return redirect("/login")
+
+    return render_template("add_product.html")
 
 
-# @app.route('/comment', methods=['POST'])
-# def comment_process():
-#     """Process comment form."""
+@app.route('/add_product', methods=['POST'])
+def add_product_process():
+    """Process form for adding products to the DB."""
+    print request.form
 
-#     email = request.form["email"]
-#     password = request.form["password"]
+    user_id = session.get("user_id")
 
-#     user = User.query.filter_by(email=email).first()
+    if not user_id:
+        flash("User does not exist. Please try again")
+        return redirect("/login")
 
-#     if not user:
-#         flash("User does not exist. Please try again")
-#         return redirect("/login")
+    user = User.query.get(user_id)
 
-#     if user.password != password:
-#         flash("Password is not correct. Please try again.")
-#         return redirect("/login")
+    product_brand = request.form.get("product_brand")
+    product_name = request.form.get("product_name")
+    price = request.form.get("price")
+    description = request.form.get("description")
+    product_category = request.form.get("product_category")
+    beauty_type = request.form.get("beauty_type")
+    skin_type = request.form.get("skin_type")
+    concern = request.form.get("concern")
 
-#     session["user_id"] = user.user_id
+    product = Product(product_brand=product_brand, product_name=product_name, price=price, description=description, product_category=product_category, beauty_type=beauty_type, skin_type=skin_type, concern=concern)
 
-#     flash("Your comment has been received.")
+    db.session.add(product)
+    db.session.commit()
 
-#     # Takes the user back to the product_detail page they were on.
-#     return redirect("/users/%s" % user.user_id)
+    flash("Your Product Submission Has Been Received.")
+    return redirect("/users/%s" % user.user_id)
 
 
 if __name__ == "__main__":

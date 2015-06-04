@@ -6,34 +6,29 @@
     <ul>
         <li>Brand: {{ product.product_brand }}</li>
         <li>Name: {{ product.product_name }}</li>
-        <li>Price: ${{ product.price }}</li>
+        <li>Typical Online Price: ${{ product.price }}</li>
+        <li>Product Category: {{ product.product_category_id }}</li><br>
         <li>Description: {{ product.description }}</li>
     </ul><br>
 
     <p>This product is recommended for:
     <ul>
-        <li>Beauty Type: {{ product.beauty_type_id }}</li>
-        <li>Product Category: {{ product.product_category_id }}</li><br>
-        <p>It has an average user rating of: {{ average }}</p>
+        <li>Beauty Type: {{ product.beauty_type.beauty_type_name }}</li>
     </ul><br>
-
-    <p>This product can be helpful for those with the following concerns:
-    <ul>
-    </ul><br>
+    <p>It has an average user rating of: {{ average }}</p>
 
         <h2>Ratings</h2>
     </ul>
 <form action="/product/{{ product.product_id }}" method="POST">
-     
-     <div class="form-group">
+    <div class="form-group">
         <label>
-            Rate this product:
-            <select name="score">
-              <option value=1>1</option>
-              <option value=2>2</option>
-              <option value=3>3</option>
-              <option value=4>4</option>
-              <option value=5>5</option>
+            Rate this product on a scale of 1 - 5:<br>
+             <select name="score" class="form-control">
+                <option value=1>1 - Hate it!</option>
+                <option value=2>2 - It kinda sucks.</option>
+                <option value=3>3 - It's prety meh..</option>
+                <option value=4>4 - Like it, but it's not my HG..</option>
+                <option value=5>5 - LOVE IT! HG STATUS!</option>
             </select>
         </label>
     </div>
@@ -41,39 +36,29 @@
     <div class="form-group">
         <label>
             Comment
-                <input type="text" name="comment_statement" class="form-control">
+                <input type="text" name="comment" class="form-control">
         </label>
     </div>
     <div class="form-group">
         <input type="submit" value="Submit" class="btn btn-danger">
     </div>
-
 </form>
 
-
-     {% if "user_id" in session %}
+    {% if "user_id" in session %}
         {% if user_rating %}
-        <ul><li>You currently rate this product as a {{ user_rating.score }}.</li>
+        <ul><li>You currently rate this product with a score of {{ user_rating.score }} and had this to say: {{ user_rating.comment }}.</li>
+        {% endif %}
     {% endif %}
-        {% if user_comment %}
-        <li>On (date here) you said: {{ user_comment.comment_statement }}.</li></ul>
-    {% endif %}
-  {% endif %}
 <br>
     {% if product.ratings %}
-        {% if product.comments %}
         <ul>
         {% for rating in product.ratings %}
-            {% for comment in product.comments %}
             <li>
-                User #<a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a>
-         gave this product a rating of: {{ rating.score }} and said {{ comment.comment_statement }}
+                (date/time here) User #<a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a> gave this product score of: {{ rating.score }} and said: {{ rating.comment }}
             </li>
-            {% endfor %}
         {% endfor %}
-            {% endif %}
-        {% endif %}
+    {% endif %}
 
-  <h4><a href = "/">Return to Homepage</a></h4>
+<h4><a href = "/">Return to Homepage</a></h4>
 
 {% endblock %}

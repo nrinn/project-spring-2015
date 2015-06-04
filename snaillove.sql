@@ -34,12 +34,8 @@ INSERT INTO users VALUES
 (NULL, "jessica@gmail.com", "mypass", "Jessica", "Simpson", "90210", 1, "Oily"),
 (NULL, "britney@gmail.com", "mypass", "Britney", "Spears", "90210", 1, "Oily");
 
+
 DELETE FROM ratings;
 INSERT INTO ratings VALUES
-(NULL, 1, 1, 5),
-(NULL, 1, 2, 1);
-
-DELETE FROM comments;
-INSERT INTO comments VALUES
-(NULL, 1, 1, "I love this stuff. Helps with everything!"),
-(NULL, 1, 2, "I hate this stuff. Makes everything worse!");
+(NULL, 1, 1, 5, "I love this stuff. Helps with everything!"),
+(NULL, 1, 2, 1, "I hate this stuff. Makes everything worse!");

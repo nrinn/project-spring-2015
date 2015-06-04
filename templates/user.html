@@ -4,16 +4,29 @@
 <h2>User Details</h2>
 
 <p>Hi {{ user.firstname }} {{ user.lastname }}, your results are in. 
-  You are a {{ user.beauty_type_id }}. Click <a href = "/beauty_type/{{ user.beauty_type_id }}">here</a> to find out what that means!</p><br>
+  You are a {{ user.beauty_type.beauty_type_name }}. Click <a href = "/beauty_type/{{ user.beauty_type_id }}">here</a> to find out what that means!</p><br>
 
    <ul>
-        <li>User ID: {{ user.user_id }}</li>
         <li>Name: {{ user.firstname }} {{ user.lastname }} </li>
         <li>Email: {{ user.email }}</li>
         <li>Zipcode: {{ user.zipcode }}</li><br>
 
+        <li>Beauty Type: {{ user.beauty_type.beauty_type_name }}</li>
         <li>Skin Type: {{ user.skin_type }}</li>
-    </ul>
+        <li>You selected the following concerns:</li>
+
+        <ol>
+            {% if "user_id" in session %}
+                {% if user.concerns %}
+                    {% for concern in user.concerns %}
+                        <li>{{ concern.concern_name }}</li>
+                    {% endfor %}
+                {% endif %}
+            {% endif %}
+        </ol>
+</ul>
+        <h3>You've reviewed the following products: </h3>
+
 
   <h4><a href = "/">Return to Homepage</a></h4>
 

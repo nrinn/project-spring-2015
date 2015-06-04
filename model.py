@@ -28,8 +28,11 @@ class User(db.Model):
     beauty_type_id = db.Column(db.Integer, db.ForeignKey('beauty_types.beauty_type_id'))
     skin_type = db.Column(db.String(64), nullable=True)
 
-    # Define relationship to beauty_type
+    # Define relationship to beauty_type, concerns, product, rating
     beauty_type = db.relationship("Beauty_Type", backref=db.backref('users', order_by=user_id))
+    concerns = db.relationship("Concern", secondary="user_concerns", backref=db.backref('users', order_by=user_id))
+    # product = db.relationship("Product", backref=db.backref('users', order_by=user_id))
+    # rating = db.relationship("Rating", backref=db.backref('users', order_by=user_id))
 
     def __repr__(self):
         """Provide helpful representation when printed."""
@@ -56,48 +59,6 @@ class User_Concern(db.Model):
         """Provide helpful representation when printed."""
 
         return "<User_Concern user_concern_id=%s user_id=%s concern_id=%s>" % (self.user_concern_id, self.user_id, self.concern_id)
-
-    # def similarity(self, other):
-    # # """Return Pearson rating for user compared to other user."""
-
-    #     u_ratings = {}
-    #     paired_ratings = []
-
-    #     for r in self.ratings:
-    #         u_ratings[r.product_id] = r
-
-    #     for r in other.ratings:
-    #         u_r = u_ratings.get(r.product_id)
-    #         if u_r:
-    #             paired_ratings.append( (u_r.score, r.score) )
-
-    #     if paired_ratings:
-    #         return correlation.pearson(paired_ratings)
-
-    #     else:
-    #         return 0.0
-
-    # def predict_rating(self, product):
-    #     # """Predict user's rating of a product."""
-
-    #     other_ratings = product.ratings
-
-    #     similarities = [
-    #         (self.similarity(r.user), r)
-    #         for r in other_ratings
-    #     ]
-
-    #     similarities.sort(reverse=True)
-
-    #     similarities = [(sim, r) for sim, r in similarities if sim > 0]
-
-    #     if not similarities:
-    #         return None
-
-    #     numerator = sum([r.score * sim for sim, r in similarities])
-    #     denominator = sum([sim for sim, r in similarities])
-
-    #     return numerator/denominator
 
 
 class Concern(db.Model):
@@ -172,9 +133,10 @@ class Rating(db.Model):
     """Users can rate many products. Products can be rated by many users (and have many ratings)."""
 
     rating_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
     user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
+    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
     score = db.Column(db.Integer)
+    comment = db.Column(db.String(1000), nullable=True)
 
      # Define relationship to user
     user = db.relationship('User', backref=db.backref('ratings', order_by=rating_id))
@@ -185,31 +147,8 @@ class Rating(db.Model):
     def __repr__(self):
         """Provide helpful representation when printed."""
 
-        return "<Rating rating_id=%s product_id=%s user_id=%s score=%s>" % (
-            self.rating_id, self.product_id, self.user_id, self.score)
-
-
-class Comment(db.Model):
-    __tablename__ = "comments"
-
-    """Users can comment on many products. Products can be commented on by many users (and have many comments)."""
-
-    comment_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
-    product_id = db.Column(db.Integer, db.ForeignKey('products.product_id'))
-    user_id = db.Column(db.Integer, db.ForeignKey('users.user_id'))
-    comment_statement = db.Column(db.String(1000), nullable=True)
-
-     # Define relationship to user
-    user = db.relationship('User', backref=db.backref('comments', order_by=comment_id))
-
-    # Define relationship to product
-    product = db.relationship('Product', backref=db.backref('comments', order_by=comment_id))
-
-    def __repr__(self):
-        """Provide helpful representation when printed."""
-
-        return "<Comment comment_id=%s product_id=%s user_id=%s comment=%s>" % (
-            self.comment_id, self.product_id, self.user_id, self.comment_statement)
+        return "<Rating rating_id=%s user_id=%s product_id=%s score=%s comment=%s>" % (
+            self.rating_id, self.user_id, self.product_id, self.score, self.comment)
 
 
 ##############################################################################
