@@ -63,6 +63,20 @@ def register_process():
     return redirect("/profile")
 
 
+@app.route('/search', methods=['GET'])
+def search_form():
+    """Show form for search by product description for whatever user has passed in & where search results show"""
+
+    q = request.args.get('q')
+    if q:
+        results = Product.query.filter(Product.description.ilike('%{}%'.format(q))).all()
+
+    else:
+        results = None
+   
+    return render_template("search.html", results=results)
+
+
 @app.route('/login', methods=['GET'])
 def login_form():
     """Show form for user login"""
@@ -252,12 +266,13 @@ def beauty_type_results(beauty_type_id):
 
 
 @app.route("/product_list/<int:beauty_type_id>/<int:product_category_id>")
-def product_list(product_category_id, beauty_type_id):
-    """Show list of real life Products, sorted by the Product Category & Beauty Type passed. Linked from beauty_type.html."""
+def product_list(beauty_type_id, product_category_id):
+    """Show list of real life Products, filtered by the Beauty Type & Product Category passed. Linked from beauty_type.html."""
 
     beauty_type = Beauty_Type.query.get(beauty_type_id)
+    print beauty_type.products
     product_category = Product_Category.query.get(product_category_id)
-    products = Product.query.order_by(Product.product_name).all()
+    products = Product.query.filter_by(beauty_type_id=beauty_type_id, product_category_id=product_category_id).all()
     return render_template("product_categories.html", beauty_type=beauty_type, product_category=product_category, products=products)
 
 
@@ -268,11 +283,6 @@ def product_detail(product_id):
     user_id = session.get("user_id")
     product = Product.query.get(product_id)
 
-    # Get average rating of product
-
-    rating_scores = [r.score for r in product.ratings]
-    avg_rating = float(sum(rating_scores)) / len(rating_scores)
-
     #Get the user's product rating & comment if they have already rated it.
     #Else, don't show a rating & comment.
 
@@ -282,6 +292,15 @@ def product_detail(product_id):
 
     else:
         user_rating = None
+
+    # Get average rating of product
+
+    rating_scores = [r.score for r in product.ratings]
+
+    if len(rating_scores) > 0:
+        avg_rating = float(sum(rating_scores)) / len(rating_scores)
+    else:
+        avg_rating = 0
 
     return render_template("product_detail.html", product=product, user_rating=user_rating, average=avg_rating)
 
@@ -297,7 +316,7 @@ def rate_product(product_id):
         raise Exception("You are not logged in.")
 
     rating = Rating.query.filter_by(user_id=user_id, product_id=product_id).first()
-    comment = Rating.query.filter_by(user_id=user_id, product_id=product_id).first()
+    # comment = Rating.query.filter_by(user_id=user_id, product_id=product_id).first()
 
     if rating:
         rating.score = score

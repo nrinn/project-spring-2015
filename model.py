@@ -34,10 +34,10 @@ class User(db.Model):
     # product = db.relationship("Product", backref=db.backref('users', order_by=user_id))
     # rating = db.relationship("Rating", backref=db.backref('users', order_by=user_id))
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
 
-        return "<User user_id=%s email=%s>" % (self.user_id, self.email)
+    #     return "<User user_id=%s email=%s>" % (self.user_id, self.email)
 
 
 class User_Concern(db.Model):
@@ -55,10 +55,10 @@ class User_Concern(db.Model):
     # Defines relationship to concern
     concern = db.relationship('Concern', backref=db.backref('user_concerns', order_by=user_concern_id))
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
 
-        return "<User_Concern user_concern_id=%s user_id=%s concern_id=%s>" % (self.user_concern_id, self.user_id, self.concern_id)
+    #     return "<User_Concern user_concern_id=%s user_id=%s concern_id=%s>" % (self.user_concern_id, self.user_id, self.concern_id)
 
 
 class Concern(db.Model):
@@ -69,10 +69,10 @@ class Concern(db.Model):
     concern_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     concern_name = db.Column(db.String(64), nullable=True)
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
 
-        return "<Concern concern_id=%s concern_name=%s>" % (self.concern_id, self.concern_name)
+    #     return "<Concern concern_id=%s concern_name=%s>" % (self.concern_id, self.concern_name)
 
 
 class Beauty_Type(db.Model):
@@ -83,10 +83,10 @@ class Beauty_Type(db.Model):
     beauty_type_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     beauty_type_name = db.Column(db.String(64), nullable=True)
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
 
-        return "<Beauty_Type beauty_type_id=%s beauty_type_name=%s>" % (self.beauty_type_id, self.beauty_type_name)
+    #     return "<Beauty_Type beauty_type_id=%s beauty_type_name=%s>" % (self.beauty_type_id, self.beauty_type_name)
 
 
 class Product_Category(db.Model):
@@ -97,11 +97,11 @@ class Product_Category(db.Model):
     product_category_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     product_category_name = db.Column(db.String(64), nullable=True)
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
 
-        return "<Product_Category product_category_id=%s product_category_name=%s>" % (
-            self.product_category_id, self.product_category_name)
+    #     return "<Product_Category product_category_id=%s product_category_name=%s>" % (
+    #         self.product_category_id, self.product_category_name)
 
 
 class Product(db.Model):
@@ -120,11 +120,11 @@ class Product(db.Model):
     beauty_type = db.relationship('Beauty_Type', backref=db.backref('products', order_by=product_id))
     product_category = db.relationship('Product_Category', backref=db.backref('products', order_by=product_id))
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
 
-        return "<Product product_id=%s product_brand=%s product_name=%s price=%s description=%s beauty_type_id=%s product_category_id=%s>" % (
-            self.product_id, self.product_brand, self.product_name, self.price, self.description, self.beauty_type_id, self.product_category_id)
+    #     return "<Product product_id=%s product_brand=%s product_name=%s price=%s description=%s beauty_type_id=%s product_category_id=%s>" % (
+    #         self.product_id, self.product_brand, self.product_name, self.price, self.description, self.beauty_type_id, self.product_category_id)
 
 
 class Rating(db.Model):
@@ -144,11 +144,11 @@ class Rating(db.Model):
     # Define relationship to product
     product = db.relationship('Product', backref=db.backref('ratings', order_by=rating_id))
 
-    def __repr__(self):
-        """Provide helpful representation when printed."""
+    # def __repr__(self):
+    #     """Provide helpful representation when printed."""
 
-        return "<Rating rating_id=%s user_id=%s product_id=%s score=%s comment=%s>" % (
-            self.rating_id, self.user_id, self.product_id, self.score, self.comment)
+    #     return "<Rating rating_id=%s user_id=%s product_id=%s score=%s comment=%s>" % (
+    #         self.rating_id, self.user_id, self.product_id, self.score, self.comment)
 
 
 ##############################################################################

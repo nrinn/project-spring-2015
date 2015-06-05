@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+
+<h1>GlowBB Search</h1><br>
+<p>A South Korean cosmetics skin care resource application.</p><br>
+
+
+    <form>
+    <input name="q" type="text"/>
+    </form>
+{% if results %}
+    here are your results
+    <ul>
+    {% for result in results %}
+        <li>{{result.product_name}}</li>
+    {% endfor %}
+    </ul>
+{% else %}
+Sorry, no results
+{% endif %}    
+
+
+<p>Existing Users: <a href = "/login">Login</a></p><br>
+<p>New Users: <a href = "/register">Register Here</a></p><br>
+<p>Get Your Beauty Type: <a href = "/profile">Fill Out The Profile Form</a></p><br>
+<p>Add Product: <a href = "/add_product">Add To The Site</a></p><br>
+
+{% endblock %}
