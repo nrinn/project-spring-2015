@@ -355,9 +355,17 @@ def add_product_process():
     description = request.form.get("description")
     product_category = request.form.get("product_category")
     beauty_type = request.form.get("beauty_type")
-    concern = request.form.get("concern")
+    # concern = request.form.get("concern")
 
-    new_product = Product(product_brand=product_brand, product_name=product_name, price=price, description=description, product_category=product_category, beauty_type=beauty_type, concern=concern)
+    new_product = Product(
+        product_brand=product_brand, 
+        product_name=product_name, 
+        price=price, 
+        description=description, 
+        product_category_id=product_category, 
+        beauty_type_id=beauty_type,
+        # concern=concern
+        )
 
     # Adds the new product to the database. Session of connection to DB.
     db.session.add(new_product)
@@ -367,8 +375,7 @@ def add_product_process():
     session["product_id"] = new_product.product_id
 
     flash("Your product submission has been received. Thank you!")
-    return redirect("/profile")
-    # return redirect("/users/%s" % user.user_id)
+    return redirect("/product_list/%s/%s" % (beauty_type, product_category))
 
 
 if __name__ == "__main__":
