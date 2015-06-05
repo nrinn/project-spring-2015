@@ -28,11 +28,9 @@ class User(db.Model):
     beauty_type_id = db.Column(db.Integer, db.ForeignKey('beauty_types.beauty_type_id'))
     skin_type = db.Column(db.String(64), nullable=True)
 
-    # Define relationship to beauty_type, concerns, product, rating
+    # Define relationship to beauty_type, concerns
     beauty_type = db.relationship("Beauty_Type", backref=db.backref('users', order_by=user_id))
     concerns = db.relationship("Concern", secondary="user_concerns", backref=db.backref('users', order_by=user_id))
-    # product = db.relationship("Product", backref=db.backref('users', order_by=user_id))
-    # rating = db.relationship("Rating", backref=db.backref('users', order_by=user_id))
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""

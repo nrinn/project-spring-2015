@@ -25,9 +25,9 @@
             Rate this product on a scale of 1 - 5:<br>
              <select name="score" class="form-control">
                 <option value=1>1 - Hate it!</option>
-                <option value=2>2 - It kinda sucks.</option>
-                <option value=3>3 - It's prety meh..</option>
-                <option value=4>4 - Like it, but it's not my HG..</option>
+                <option value=2>2 - It's not very good.</option>
+                <option value=3>3 - Meh.</option>
+                <option value=4>4 - Like it, but it's not my HG.</option>
                 <option value=5>5 - LOVE IT! HG STATUS!</option>
             </select>
         </label>
@@ -54,7 +54,7 @@
         <ul>
         {% for rating in product.ratings %}
             <li>
-                (date/time here) User #<a href="/users/{{ rating.user_id }}">{{ rating.user_id }}</a> gave this product score of: {{ rating.score }} and said: {{ rating.comment }}
+                On (date/time here) <a href="/users/{{ rating.user_id }}">{{ rating.user.firstname }}</a> gave this product score of: {{ rating.score }} and said: {{ rating.comment }}
             </li>
         {% endfor %}
     {% endif %}

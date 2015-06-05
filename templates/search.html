@@ -2,24 +2,24 @@
 {% block content %}
 
 <h1>GlowBB Search</h1><br>
-<p>A South Korean cosmetics skin care resource application.</p><br>
-
+<p>Search for a product by keyword.</p><br>
 
     <form>
-    <input name="q" type="text"/>
-    </form>
+    <input name="q" type="text" value="{{q}}"/><br>
+    <input type="submit" value="Search" class="btn btn-danger">
+    </form><br>
 {% if results %}
-    here are your results
+    Results of your search:<br>
     <ul>
     {% for result in results %}
-        <li>{{result.product_name}}</li>
+        <li><a href = "/product/{{ result.product_id }}">{{result.product_name}}</a></li>
     {% endfor %}
     </ul>
-{% else %}
-Sorry, no results
+{% elif q %}
+Sorry, your search found no results.<br>
 {% endif %}    
 
-
+<br>
 <p>Existing Users: <a href = "/login">Login</a></p><br>
 <p>New Users: <a href = "/register">Register Here</a></p><br>
 <p>Get Your Beauty Type: <a href = "/profile">Fill Out The Profile Form</a></p><br>

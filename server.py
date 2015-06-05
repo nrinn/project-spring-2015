@@ -5,6 +5,7 @@ from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
 import operator
+import praw
 
 app = Flask(__name__)
 
@@ -21,13 +22,7 @@ app.jinja_env.undefined = StrictUndefined
 def index():
     """Homepage."""
 
-    # user_id = session.get("user_id")
-
-    # if not user_id:
-    #     return redirect("/login")
-    # else:
-    #     user = User.query.get(user_id)
-    return render_template('homepage.html')  #user=user
+    return render_template('homepage.html')
 
 
 @app.route('/register', methods=['GET'])
@@ -65,16 +60,16 @@ def register_process():
 
 @app.route('/search', methods=['GET'])
 def search_form():
-    """Show form for search by product description for whatever user has passed in & where search results show"""
+    """Show search form by product description keyword & search results (if any)."""
 
-    q = request.args.get('q')
+    q = request.args.get('q', '')
     if q:
         results = Product.query.filter(Product.description.ilike('%{}%'.format(q))).all()
 
     else:
         results = None
-   
-    return render_template("search.html", results=results)
+
+    return render_template("search.html", results=results, q=q)
 
 
 @app.route('/login', methods=['GET'])
@@ -233,22 +228,12 @@ def user_detail(user_id):
     """Includes info from profile form & Beauty Type if user has taken profile form."""
     """Show list of any Products the User has Rated, sorted by the User & Product passed."""
 
-    user_id = session.get("user_id")
     user = User.query.get(user_id)
-    # products = Product.query.order_by(Product.product_name).all()
-    # product = Product.query.get(product_id)
+    if session.get("user_id") != user.user_id:
+        flash("User does not exist. Please try again")
+        return redirect("/login")
 
-    #Get the user's product rating & comment if they have rated any products.
-    #Else, don't show any product ratings.
-
-    # if user_id:
-    #     user_rating = Rating.query.filter_by(
-    #         product_id=product_id, user_id=user_id).first()
-
-    # else:
-    #     user_rating = None
-
-    return render_template("user.html", user=user)  #products=products, product=product, user_rating=user_rating
+    return render_template("user.html", user=user)
 
 
 @app.route("/beauty_type/<int:beauty_type_id>")
@@ -339,6 +324,15 @@ def rate_product(product_id):
     db.session.commit()
 
     return redirect("/product/%s" % product_id)
+
+
+# @app.route("/reddit", methods=['GET'])
+# def get_reddit(keyword):
+#     """Gets top 10 results from asian beauty subreddit that match """
+
+#     submissions = r.get_subreddit('asianbeauty').get_top(limit=10)
+
+#     return render_template("reddit.html")
 
 
 @app.route('/add_product', methods=['GET'])

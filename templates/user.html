@@ -25,8 +25,18 @@
             {% endif %}
         </ol>
 </ul>
-        <h3>You've reviewed the following products: </h3>
+         {% if user.ratings %}
 
+    <h3>You've reviewed the following products: </h3>
+        <ul>
+        {% for rating in user.ratings %}
+            <li>
+                <a href="/product/{{ rating.product_id }}">{{ rating.product.product_brand }} {{ rating.product.product_name }}</a>
+         was given the score of: {{ rating.score }} and comment of: {{ rating.comment }}
+            </li>
+    {% endfor %}
+        </ul>
+  {% endif %}
 
   <h4><a href = "/">Return to Homepage</a></h4>
 
