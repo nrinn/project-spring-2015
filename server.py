@@ -4,8 +4,10 @@ from jinja2 import StrictUndefined
 from flask import Flask, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
+# import praw, datetime, os, nltk
 import operator
-import praw
+from operator import itemgetter
+from sqlalchemy import or_
 
 app = Flask(__name__)
 
@@ -56,20 +58,6 @@ def register_process():
 
     # Takes user to profile form immediately after submitting registration.
     return redirect("/profile")
-
-
-@app.route('/search', methods=['GET'])
-def search_form():
-    """Show search form by product description keyword & search results (if any)."""
-
-    q = request.args.get('q', '')
-    if q:
-        results = Product.query.filter(Product.description.ilike('%{}%'.format(q))).all()
-
-    else:
-        results = None
-
-    return render_template("search.html", results=results, q=q)
 
 
 @app.route('/login', methods=['GET'])
@@ -123,8 +111,6 @@ def profile_form():
         flash("User must be logged in.")
         return redirect("/login")
 
-    # user = User.query.get(user_id)
-
     return render_template("profile_form.html")
 
 
@@ -152,30 +138,102 @@ def profile_process():
     oiliness = request.form.get("oiliness")
     scars = request.form.get("scars")
 
-#dictionary with all 4 beauty types as the keys and the values as 0 for each (for now)
+#Dictionary of all beauty types w/values of 0. Values are incremented depending
+#on how profile form questions are answered. Dictonary sorted backwards by value.
+#Beauty type/key with highest value is assigned to user as their beauty type.
     beauty_types = {
-        1: 0,  # oily (dewdrop)
-        2: 0,  # combination
-        3: 0,  # normal
-        4: 0, }  # dry
+        1: 0,  # dewdrop
+        2: 0,  # snail
+        3: 0,  # bee
+        4: 0, }  # starfish
 
+    """DEWDROP 1"""
     if skin_type == "oily":
-        beauty_types[1] += 10
+        beauty_types[1] += 20
 
     if acne == "true":
-        beauty_types[1] += 5
+        beauty_types[1] += 10
 
     if aging == "true":
         beauty_types[1] += 5
 
-    if oiliness == "true":
-        beauty_types[1] += 5
+    if dryness == "true":
+        beauty_types[1] -= 20
 
     if dullness == "true":
-        beauty_types[4] += 100
+        beauty_types[1] += 5
 
-    if skin_type == "dry":
+    if oiliness == "true":
+        beauty_types[1] += 20
+
+    if scars == "true":
+        beauty_types[1] += 5
+
+    """SNAIL 2"""
+    if skin_type == "combination":
+        beauty_types[2] += 20
+
+    if acne == "true":
         beauty_types[2] += 10
+
+    if aging == "true":
+        beauty_types[2] += 5
+
+    if dryness == "true":
+        beauty_types[2] += 15
+
+    if dullness == "true":
+        beauty_types[2] += 10
+
+    if oiliness == "true":
+        beauty_types[2] += 15
+
+    if scars == "true":
+        beauty_types[2] += 10
+
+    """BEE 3"""
+    if skin_type == "normal":
+        beauty_types[3] += 20
+
+    if acne == "true":
+        beauty_types[3] -= 5
+
+    if aging == "true":
+        beauty_types[3] += 5
+
+    if dryness == "true":
+        beauty_types[3] -= 5
+
+    if dullness == "true":
+        beauty_types[3] += 15
+
+    if oiliness == "true":
+        beauty_types[3] -= 5
+
+    if scars == "true":
+        beauty_types[3] += 5
+
+    """STARFISH 4"""
+    if skin_type == "dry":
+        beauty_types[4] += 20
+
+    if acne == "true":
+        beauty_types[4] += 5
+
+    if aging == "true":
+        beauty_types[4] += 5
+
+    if dryness == "true":
+        beauty_types[4] += 20
+
+    if dullness == "true":
+        beauty_types[4] += 10
+
+    if oiliness == "true":
+        beauty_types[4] -= 20
+
+    if scars == "true":
+        beauty_types[4] += 5
 
     print beauty_types
 
@@ -207,12 +265,6 @@ def profile_process():
         scars = User_Concern(user_id=user_id, concern_id=6)
         db.session.add(scars)
 
-
-    #dict w/all types as keys, values as 0 to start, go thru info in form, and 
-    #based on info increment all 9 types, once i'm done values will be some 
-    #integer and I'll sort to get highest value, highest value will be my 
-    #beauty type, I can direct user to beauty type
-
     print "assigning beauty type", sorted_beauty_types[-1][0]
     user.beauty_type_id = sorted_beauty_types[-1][0]
     db.session.add(user)
@@ -240,7 +292,6 @@ def user_detail(user_id):
 def beauty_type_results(beauty_type_id):
     """Shows results of profile form, the Beauty Type assigned to the user. Linked from user.html (after they fill out profile form)"""
     """Includes a list of Product Categories sorted by the Beauty Type passed."""
-    # finds all product categories related to beauty_type_id (which is all of them)
 
     user_id = session.get("user_id")
     user = User.query.get(user_id)
@@ -267,6 +318,7 @@ def product_detail(product_id):
 
     user_id = session.get("user_id")
     product = Product.query.get(product_id)
+    # today = datetime.date.today()
 
     #Get the user's product rating & comment if they have already rated it.
     #Else, don't show a rating & comment.
@@ -327,12 +379,59 @@ def rate_product(product_id):
 
 
 # @app.route("/reddit", methods=['GET'])
-# def get_reddit(keyword):
+# def get_reddit():
 #     """Gets top 10 results from asian beauty subreddit that match """
 
-#     submissions = r.get_subreddit('asianbeauty').get_top(limit=10)
+#     r = praw.Reddit(user_agent='glowbb')
+#     subreddit = r.get_subreddit('asianbeauty')
+#     submissions = subreddit.get_new(limit=10)
 
-#     return render_template("reddit.html")
+#     for submission in submissions:
+#         print('[*] Processing submissions')
+#         op_text = submission.selftext.lower()
+#         print(op_text)
+
+#     # get all recent comments for the subreddit
+#     all_comments = subreddit.get_comments(limit=10)
+#     # flatten all comments
+#     praw.helpers.flatten_tree(all_comments)
+
+#     for comment in all_comments:
+#         print('[*] Comment body: %s' % comment.body)
+
+    # keyword = request.args.get("keyword")
+
+    # class praw.__init__.Reddit(*args, **kwargs)
+        # get_content(url, params=None, limit=0, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
+
+
+
+    # subreddit = r.get_subreddit('asianbeauty')
+    # # [str(x) for x in submissions]
+
+
+    # for submissions in subreddit:
+    #     print submissions
+
+    # print "\n\n\n%s\n\n\n" % r
+
+    # print "\n\n\n%s\n\n\n" % submissions
+
+    # r = praw.Reddit(user_agent='glowbb')
+    # r.login('glowbb', 'hackbrightx')
+    # subreddit = r.get_subreddit('asianbeauty')
+    # # subreddit_comments = subreddit.get_comments()
+    # submission = r.get_subreddit('asianbeauty').get_top(limit=10)
+    # for comment in submission.comments:
+    #     print comment.body
+    # flat_comments = praw.helpers.flatten_tree(submission.comments)
+    # for comment in flat_comments:
+    #     if comment.body == "Hello":
+    #         reply_world(comment)
+    # subreddit = r.get_subreddit('asianbeauty')
+    # subreddit_comments = subreddit.get_comments()
+
+    # return render_template("reddit.html", comment=comment, all_comments=all_comments)
 
 
 @app.route('/add_product', methods=['GET'])
@@ -351,15 +450,6 @@ def add_product_form():
 @app.route('/add_product', methods=['POST'])
 def add_product_process():
     """Process form for adding products to the DB."""
-    # print request.form
-
-    # user_id = session.get("user_id")
-
-    # if not user_id:
-    #     flash("User does not exist. Please try again")
-    #     return redirect("/login")
-
-    # user = User.query.get(user_id)
 
     # Get add_product form variables
     product_brand = request.form.get("product_brand")
@@ -368,16 +458,18 @@ def add_product_process():
     description = request.form.get("description")
     product_category = request.form.get("product_category")
     beauty_type = request.form.get("beauty_type")
-    # concern = request.form.get("concern")
+
+    concern_id = request.form.get("concern")
+    print '\n\n\n%s\n\n\n\n'%concern_id
 
     new_product = Product(
-        product_brand=product_brand, 
-        product_name=product_name, 
-        price=price, 
-        description=description, 
-        product_category_id=product_category, 
+        product_brand=product_brand,
+        product_name=product_name,
+        price=price,
+        description=description,
+        product_category_id=product_category,
         beauty_type_id=beauty_type,
-        # concern=concern
+        concern_id=concern_id
         )
 
     # Adds the new product to the database. Session of connection to DB.
@@ -389,6 +481,20 @@ def add_product_process():
 
     flash("Your product submission has been received. Thank you!")
     return redirect("/product_list/%s/%s" % (beauty_type, product_category))
+
+
+@app.route('/search', methods=['GET'])
+def search_form():
+    """Show search form & results (if any). Searches Product brand, name & description."""
+
+    q = request.args.get('q', '')
+    if q:
+        results = Product.query.filter(or_(Product.description.ilike('%{}%'.format(q)), Product.product_name.ilike('%{}%'.format(q)), Product.product_brand.ilike('%{}%'.format(q)))).all()
+
+    else:
+        results = None
+
+    return render_template("search.html", results=results, q=q)
 
 
 if __name__ == "__main__":

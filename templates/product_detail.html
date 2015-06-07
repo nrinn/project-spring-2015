@@ -54,7 +54,7 @@
         <ul>
         {% for rating in product.ratings %}
             <li>
-                On (date/time here) <a href="/users/{{ rating.user_id }}">{{ rating.user.firstname }}</a> gave this product score of: {{ rating.score }} and said: {{ rating.comment }}
+                On {{ today }} <a href="/users/{{ rating.user_id }}">{{ rating.user.firstname }}</a> gave this product score of: {{ rating.score }} and said: {{ rating.comment }}
             </li>
         {% endfor %}
     {% endif %}

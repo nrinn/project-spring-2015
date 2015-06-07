@@ -4,13 +4,16 @@
 <h2>Beauty Type Details</h2>
 
 <p>You are a {{ beauty_type.beauty_type_name }}!</p>
+<p>According to your profile, your skin type is {{ user.skin_type }} and you have the following skin care concerns:</p>
+<ul>
   {% if "user_id" in session %}
       {% if user.concerns %}
           {% for concern in user.concerns %}
-              <li>You have the following concerns: {{ concern.concern_name }}.</li>
+               <li>{{ concern.concern_name }}</li>
           {% endfor %}
       {% endif %}
   {% endif %}
+</ul>
 
 
 

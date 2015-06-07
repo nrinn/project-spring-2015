@@ -114,9 +114,11 @@ class Product(db.Model):
     description = db.Column(db.String(1000), nullable=True)
     beauty_type_id = db.Column(db.Integer, db.ForeignKey('beauty_types.beauty_type_id'))
     product_category_id = db.Column(db.Integer, db.ForeignKey('product_categories.product_category_id'))
+    concern_id = db.Column(db.Integer, db.ForeignKey('concerns.concern_id'))
 
     beauty_type = db.relationship('Beauty_Type', backref=db.backref('products', order_by=product_id))
     product_category = db.relationship('Product_Category', backref=db.backref('products', order_by=product_id))
+    concern = db.relationship('Concern', backref=db.backref('products', order_by=product_id))
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""
