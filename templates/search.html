@@ -5,14 +5,14 @@
 <p>Search for a product by keyword.</p><br>
 
     <form>
-    <input name="q" type="text" value="{{q}}"/><br>
+    <input name="q" type="text" value="{{q}}"/><br><br>
     <input type="submit" value="Search" class="btn btn-danger">
     </form><br>
 {% if results %}
     Results of your search:<br>
     <ul>
     {% for result in results %}
-        <li><a href = "/product/{{ result.product_id }}">{{result.product_name}}</a></li>
+        <li><a href = "/product/{{ result.product_id }}">{{result.product_brand}} {{result.product_name}}</a></li>
     {% endfor %}
     </ul>
 {% elif q %}

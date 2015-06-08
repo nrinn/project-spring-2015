@@ -27,6 +27,7 @@ class User(db.Model):
     zipcode = db.Column(db.String(15), nullable=True)
     beauty_type_id = db.Column(db.Integer, db.ForeignKey('beauty_types.beauty_type_id'))
     skin_type = db.Column(db.String(64), nullable=True)
+    skin_condition = db.Column(db.String(64), nullable=True)
 
     # Define relationship to beauty_type, concerns
     beauty_type = db.relationship("Beauty_Type", backref=db.backref('users', order_by=user_id))

@@ -1,13 +1,15 @@
 """GlowBB"""
 
 from jinja2 import StrictUndefined
-from flask import Flask, render_template, redirect, request, flash, session
+from flask import Flask, jsonify, render_template, redirect, request, flash, session
 from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
-# import praw, datetime, os, nltk
+import praw, datetime, os, nltk
 import operator
 from operator import itemgetter
 from sqlalchemy import or_
+# from lib.helpers import hash
+# import json
 
 app = Flask(__name__)
 
@@ -127,14 +129,17 @@ def profile_process():
     user = User.query.get(user_id)
 
     # Gets profile form variables and adds them to user_id.
-    #Q1: Gets user's skin type (dropdown)
+    #Q1 & 2: Gets user's skin type (both radio)
     skin_type = request.form.get("skin_type")
+    skin_condition = request.form.get("skin_condition")
 
-    #Q2: Allows user to select up to 3 skin "concerns" from list (checkbox)
+    #Q3: Allows user to select up to 3 skin "concerns" from list (checkbox)
     acne = request.form.get("acne")
     aging = request.form.get("aging")
+    clogged = request.form.get("clogged")
     dryness = request.form.get("dryness")
     dullness = request.form.get("dullness")
+    irritated = request.form.get("irritated")
     oiliness = request.form.get("oiliness")
     scars = request.form.get("scars")
 
@@ -142,98 +147,151 @@ def profile_process():
 #on how profile form questions are answered. Dictonary sorted backwards by value.
 #Beauty type/key with highest value is assigned to user as their beauty type.
     beauty_types = {
-        1: 0,  # dewdrop
-        2: 0,  # snail
-        3: 0,  # bee
-        4: 0, }  # starfish
+        1: 0,  # starfish/oily
+        2: 0,  # snail/combination
+        3: 0,  # bee/normal
+        4: 0,  # butterfly/dry
+        5: 0, }  # dragonfly/dehydrated
 
-    """DEWDROP 1"""
-    if skin_type == "oily":
-        beauty_types[1] += 20
+    """STARFISH 1"""
+    if skin_type and skin_condition == "Oily":
+        beauty_types[1] += 50
 
     if acne == "true":
-        beauty_types[1] += 10
+        beauty_types[1] += 0
 
     if aging == "true":
-        beauty_types[1] += 5
+        beauty_types[1] += 0
+
+    if clogged == "true":
+        beauty_types[1] += 0
 
     if dryness == "true":
-        beauty_types[1] -= 20
+        beauty_types[1] += 0
 
     if dullness == "true":
-        beauty_types[1] += 5
+        beauty_types[1] += 0
+
+    if irritated == "true":
+        beauty_types[1] += 0
 
     if oiliness == "true":
-        beauty_types[1] += 20
+        beauty_types[1] += 0
 
     if scars == "true":
-        beauty_types[1] += 5
+        beauty_types[1] += 0
 
     """SNAIL 2"""
-    if skin_type == "combination":
-        beauty_types[2] += 20
+    if skin_type and skin_condition == "Combination":
+        beauty_types[2] += 50
 
     if acne == "true":
-        beauty_types[2] += 10
+        beauty_types[2] += 0
 
     if aging == "true":
-        beauty_types[2] += 5
+        beauty_types[2] += 0
+
+    if clogged == "true":
+        beauty_types[2] += 0
 
     if dryness == "true":
-        beauty_types[2] += 15
+        beauty_types[2] += 0
 
     if dullness == "true":
-        beauty_types[2] += 10
+        beauty_types[2] += 0
+
+    if irritated == "true":
+        beauty_types[2] += 0
 
     if oiliness == "true":
-        beauty_types[2] += 15
+        beauty_types[2] += 0
 
     if scars == "true":
-        beauty_types[2] += 10
+        beauty_types[2] += 0
 
     """BEE 3"""
-    if skin_type == "normal":
-        beauty_types[3] += 20
+    if skin_type and skin_condition == "Normal":
+        beauty_types[3] += 50
 
     if acne == "true":
-        beauty_types[3] -= 5
+        beauty_types[3] += 0
 
     if aging == "true":
-        beauty_types[3] += 5
+        beauty_types[3] += 0
+
+    if clogged == "true":
+        beauty_types[3] += 0
 
     if dryness == "true":
-        beauty_types[3] -= 5
+        beauty_types[3] += 0
 
     if dullness == "true":
-        beauty_types[3] += 15
+        beauty_types[3] += 0
+
+    if irritated == "true":
+        beauty_types[3] += 0
 
     if oiliness == "true":
-        beauty_types[3] -= 5
+        beauty_types[3] += 0
 
     if scars == "true":
-        beauty_types[3] += 5
+        beauty_types[3] += 0
 
-    """STARFISH 4"""
-    if skin_type == "dry":
-        beauty_types[4] += 20
+    """BUTTERFLY 4"""
+    if skin_type and skin_condition == "Dry":
+        beauty_types[4] += 50
 
     if acne == "true":
-        beauty_types[4] += 5
+        beauty_types[4] += 0
 
     if aging == "true":
-        beauty_types[4] += 5
+        beauty_types[4] += 0
+
+    if clogged == "true":
+        beauty_types[4] += 0
 
     if dryness == "true":
-        beauty_types[4] += 20
+        beauty_types[4] += 0
 
     if dullness == "true":
-        beauty_types[4] += 10
+        beauty_types[4] += 0
+
+    if irritated == "true":
+        beauty_types[4] += 0
 
     if oiliness == "true":
-        beauty_types[4] -= 20
+        beauty_types[4] += 0
 
     if scars == "true":
-        beauty_types[4] += 5
+        beauty_types[4] += 0
+
+    """DRAGONFLY 5"""
+    if skin_type and skin_condition == "Dehydrated":
+        beauty_types[5] += 50
+
+    if acne == "true":
+        beauty_types[5] += 0
+
+    if aging == "true":
+        beauty_types[5] += 0
+
+    if clogged == "true":
+        beauty_types[5] += 0
+
+    if dryness == "true":
+        beauty_types[5] += 0
+
+    if dullness == "true":
+        beauty_types[5] += 0
+
+    if irritated == "true":
+        beauty_types[5] += 0
+
+    if oiliness == "true":
+        beauty_types[5] += 0
+
+    if scars == "true":
+        beauty_types[5] += 0
 
     print beauty_types
 
@@ -241,6 +299,7 @@ def profile_process():
     print sorted_beauty_types
 
     user.skin_type = skin_type
+    user.skin_condition = skin_condition
 
     # deletes any row in user_concern table mapping this user to that concern, clears out info from uc table
     User_Concern.query.filter_by(user_id=user_id).delete()
@@ -252,17 +311,23 @@ def profile_process():
     if aging:
         aging = User_Concern(user_id=user_id, concern_id=2)
         db.session.add(aging)
+    if clogged:
+        clogged = User_Concern(user_id=user_id, concern_id=3)
+        db.session.add(clogged)
     if dryness:
-        dryness = User_Concern(user_id=user_id, concern_id=3)
+        dryness = User_Concern(user_id=user_id, concern_id=4)
         db.session.add(dryness)
     if dullness:
-        dullness = User_Concern(user_id=user_id, concern_id=4)
+        dullness = User_Concern(user_id=user_id, concern_id=5)
         db.session.add(dullness)
+    if irritated:
+        irritated = User_Concern(user_id=user_id, concern_id=6)
+        db.session.add(irritated)
     if oiliness:
-        oiliness = User_Concern(user_id=user_id, concern_id=5)
+        oiliness = User_Concern(user_id=user_id, concern_id=7)
         db.session.add(oiliness)
     if scars:
-        scars = User_Concern(user_id=user_id, concern_id=6)
+        scars = User_Concern(user_id=user_id, concern_id=8)
         db.session.add(scars)
 
     print "assigning beauty type", sorted_beauty_types[-1][0]
@@ -379,59 +444,77 @@ def rate_product(product_id):
 
 
 # @app.route("/reddit", methods=['GET'])
-# def get_reddit():
-#     """Gets top 10 results from asian beauty subreddit that match """
+# def get_top_reddit():
+#     """Search asian beauty subreddit for products"""
 
-#     r = praw.Reddit(user_agent='glowbb')
-#     subreddit = r.get_subreddit('asianbeauty')
-#     submissions = subreddit.get_new(limit=10)
+#     # connect to reddit api
+#     # user_agent = "glowbb"
+#     # r = praw.Reddit(user_agent=user_agent)
+#     # submissions = r.get_subreddit('asianbeauty').get_hot(limit=10)
+#     # get top 10 submissions in asianbeauty subreddit
+#     # for result in submissions:
+#     # for submissions in r.get_subreddit('asianbeauty').get_hot(limit=10):
 
+#     # get_content('http://www.reddit.com/r/AsianBeauty/', params=keyword, limit=25, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
+#     # query = 'url:title'
+#     # search(query, subreddit='asianbeauty', sort=None, syntax=None, period=year, *args, **kwargs)
+
+#     user_agent = "glowbb"
+#     r = praw.Reddit(user_agent=user_agent)
+#     query = 'url:title'
+#     submissions = r.search(query=query, subreddit='asianbeauty', sort='hot', period='month', limit=100)
+#     posts = []
 #     for submission in submissions:
-#         print('[*] Processing submissions')
-#         op_text = submission.selftext.lower()
-#         print(op_text)
+#         post_obj = {
+#             'title': submissions.title,
+#             'url': submissions.url
+#         }
+#         posts.append(post_obj)
+#     # return jsonify({'posts': posts})
 
-#     # get all recent comments for the subreddit
-#     all_comments = subreddit.get_comments(limit=10)
-#     # flatten all comments
-#     praw.helpers.flatten_tree(all_comments)
+#     return render_template('reddit.html', r=r, submissions=submissions, posts=posts, query=query)
 
-#     for comment in all_comments:
-#         print('[*] Comment body: %s' % comment.body)
+# CLIENT_ID = 'YOUR_CLIENT_ID'
+# CLIENT_SECRET = 'YOUR CLIENT SECRET'
+# REDIRECT_URI = 'http://127.0.0.1:65010/authorize_callback'
 
-    # keyword = request.args.get("keyword")
+# print "\n\n\n%s\n\n\n" % r
+# print "\n\n\n%s\n\n\n" % submissions
 
-    # class praw.__init__.Reddit(*args, **kwargs)
-        # get_content(url, params=None, limit=0, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
+# @app.route('/')
+# def homepage():
+#     link_no_refresh = r.get_authorize_url('UniqueKey')
+#     link_refresh = r.get_authorize_url('DifferentUniqueKey',
+#                                        refreshable=True)
+#     link_no_refresh = "<a href=%s>link</a>" % link_no_refresh
+#     link_refresh = "<a href=%s>link</a>" % link_refresh
+#     text = "First link. Not refreshable %s</br></br>" % link_no_refresh
+#     text += "Second link. Refreshable %s</br></br>" % link_refresh
+#     return text
+
+# @app.route('/authorize_callback')
+# def authorized():
+#     state = request.args.get('state', '')
+#     code = request.args.get('code', '')
+#     info = r.get_access_information(code)
+#     user = r.get_me()
+#     variables_text = "State=%s, code=%s, info=%s." % (state, code,
+#                                                       str(info))
+#     text = 'You are %s and have %u link karma.' % (user.name,
+#                                                    user.link_karma)
+#     back_link = "<a href='/'>Try again</a>"
+#     return variables_text + '</br></br>' + text + '</br></br>' + back_link
 
 
+    # if submissions:
+    #     results = Product.query.filter(or_(Product.description.ilike('%{}%'.format(submissions)), Product.product_name.ilike('%{}%'.format(submissions)), Product.product_brand.ilike('%{}%'.format(submissions)))).all()
 
-    # subreddit = r.get_subreddit('asianbeauty')
-    # # [str(x) for x in submissions]
+    # else:
+    #     results = None
 
 
-    # for submissions in subreddit:
-    #     print submissions
-
-    # print "\n\n\n%s\n\n\n" % r
-
-    # print "\n\n\n%s\n\n\n" % submissions
-
-    # r = praw.Reddit(user_agent='glowbb')
-    # r.login('glowbb', 'hackbrightx')
-    # subreddit = r.get_subreddit('asianbeauty')
-    # # subreddit_comments = subreddit.get_comments()
-    # submission = r.get_subreddit('asianbeauty').get_top(limit=10)
-    # for comment in submission.comments:
-    #     print comment.body
-    # flat_comments = praw.helpers.flatten_tree(submission.comments)
-    # for comment in flat_comments:
-    #     if comment.body == "Hello":
-    #         reply_world(comment)
-    # subreddit = r.get_subreddit('asianbeauty')
-    # subreddit_comments = subreddit.get_comments()
-
-    # return render_template("reddit.html", comment=comment, all_comments=all_comments)
+# class praw.__init__.Reddit(*args, **kwargs)
+#     get_content(url, params=None, limit=10, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
 
 
 @app.route('/add_product', methods=['GET'])

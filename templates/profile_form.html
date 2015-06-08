@@ -1,29 +1,61 @@
 {% extends 'base.html' %}
 {% block content %}
 
+<h1>What's your beauty type?</h1><br>
+<p>Do you know what type of skin you have and which products will best suit your skin? Most people do not. Knowing the answers to these questions is essential to treating your skin properly. Skin types vary depending on factors like:</p><br>
+    <ul>
+        <li>Water cotnent, which affects your skin's comfort and elasticity.</li>
+        <li>Oil (lipid) content, which affects your skin's softness.</li>
+        <li>Sensitivity level.</li>
+        <li>Weather or level of pollution where you live.</li>
+        <li>Hormones.</li>
+        <li>Factors like stress, the amount of sleep you receive each night, the quantity of water you consume daily, and the types of foods you eat.</li>
+    </ul><br>
+    <p>To determine your skin type wash your face and remove all dirt, sunscreen and makeup prior to going to bed one evening. Do not use any skin care products post wash (including moisturizer). Sleep in an air conditioner & heater free environment.</p><br>
+    <p>Upon waking up the following morning, do not do anything to your face. First take some time to first observe your skin from all angles, and then, take a clean piece of oil blotting tissue, or a thin piece of paper and wipe it around your face in the following areas:</p><br>
+    <ul>
+        <li>The T Zone: Consists of your forehead, nose (top and sides) and chin.</li>
+        <li>The C Zone: Draw a C on the outside of your face from your temples to your jaw.</li>
+    </ul><br>
+    <p>Then answer the following questions based upon what you see.</p>
+
 <h1>Profile Form</h1>
 
 <form action="profile" method="POST">
 
     <div class="form-group">
         <label>
-            Question 1: Which of the following statements best describes your skin?<br>
-             <select name="skin_type" class="form-control">
-                <option value="Oily">My skin produces oil all over my face.</option>
-                <option value="Combination">My skin only produces oil in certain areas like my forehead, nose, and/or chin/jawline.</option>
-                <option value="Normal">My skin is neither very oily nor very dry.</option>
-                <option value="Dry">My skin is dry all over.</option>
+            Question 1: Which of the following statements best describes the oil content of your skin?<br>
+                <input value="Oily" name="skin_type" type="radio"> Appears shiny or greasy in the T zone, and possibly in the C zone as well.<br>
+                <input value="Combination" name="skin_type" type="radio"> Some areas appear oily and other dry.<br>
+                <input value="Normal" name="skin_type" type="radio"> Not too oily or too dry. T zone may or may not be slightly oily. C zone is dry.<br>
+                <input value="Dry" name="skin_type" type="radio"> No visible oil on the facial tissue. Your face may feel tight and/or appear flaky after you wipe it.<br>
+                <input value="Dehydrated" name="skin_type" type="radio"> Skin is extremely dry and flaky, no oil is apparent. May be red and burn. OR, skin may be extremey oily in some areas, but very dry and flaky in others.<br>
             </select>
         </label>
     </div>
 
     <div class="form-group">
         <label>
-            Question 2: What are your main skin concerns. Select up to 3.<br>
+            Question 2: Which of the following statements best describes the texture and appearance of your skin & pores?<br>
+                <input value ="Oily" name="skin_condition" type="radio"> Pores are enlarged. There may be blackheads or acne.<br>
+                <input value="Combination" name="skin_condition" type="radio"> Pores may appear dilated in some areas of the face. Skin might appear slightly shiny or wet and could have blackheads.<br>
+                <input value="Normal" name="skin_condition" type="radio"> Pores are barely visible. There are few or no imperfections. Most of the skin appears and feels hydrated, smooth, and radiant.<br>
+                <input value="Dry" name="skin_condition" type="radio"> Pores not very visible. Skin may appear sallow and/or rough. Less elasticity, more prone to visible lines<br>
+                <input value="Dehydrated" name="skin_condition" type="radio"> Skin feels very tight. You may experience burning or itching. May be inflamed or irritated very easily. Complexion is dull and sagging.<br>
+            </select>
+        </label>
+    </div>
+
+    <div class="form-group">
+        <label>
+            Question 3: What are your main skin concerns. Select up to 3.<br>
             <input type="checkbox" value="true" name="acne" /> Acne<br>
-            <input type="checkbox" value="true" name="aging" /> Aging<br>
+            <input type="checkbox" value="true" name="aging" /> Age Prevention<br>
+            <input type="checkbox" value="true" name="clogged" /> Clogged Pores or Blackheads<br>
             <input type="checkbox" value="true" name="dryness" /> Dryness<br>
             <input type="checkbox" value="true" name="dullness" /> Dullness<br>
+            <input type="checkbox" value="true" name="irritated" /> Easily Irritated<br>
             <input type="checkbox" value="true" name="oiliness" /> Oiliness<br>
             <input type="checkbox" value="true" name="scars" /> Scars or Discoloration<br>
         </label>
