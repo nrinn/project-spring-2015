@@ -98,8 +98,6 @@ def login_process():
 def logout():
     """Logs user out, redirects to Homepage"""
 
-    if 
-
     del session["user_id"]
     flash("You have logged out.")
     return redirect("/")
