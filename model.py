@@ -81,6 +81,7 @@ class Beauty_Type(db.Model):
 
     beauty_type_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     beauty_type_name = db.Column(db.String(64), nullable=True)
+    description = db.Column(db.String(2000), nullable=True)
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""
@@ -95,6 +96,7 @@ class Product_Category(db.Model):
 
     product_category_id = db.Column(db.Integer, autoincrement=True, primary_key=True)
     product_category_name = db.Column(db.String(64), nullable=True)
+    description = db.Column(db.String(2000), nullable=True)
 
     # def __repr__(self):
     #     """Provide helpful representation when printed."""

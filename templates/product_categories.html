@@ -1,12 +1,7 @@
 {% extends 'base.html' %}
 {% block content %}
 
-    <h2>{{ product_category.product_category_name }}</h2><br>
-    <p>This is a list of products that match the beauty type & product category indicated.
-      So Beauty Type 1, Product Category 4 would be a list of Essences meant for Oily skin</p>
-
-      LIST OF REAL PRODUCTS
-
+    <h4>{{ product_category.product_category_name }} Products for {{ beauty_type.beauty_type_name }} Types</h4>
 
     <ul>
       {% for product in products %}
@@ -16,7 +11,7 @@
               </a>
           </li>
       {% endfor %}
-    </ul>
+    </ul><br>
     
   <h4><a href = "/">Return to Homepage</a></h4>
 

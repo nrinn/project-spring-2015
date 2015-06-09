@@ -2,7 +2,7 @@
 
 from jinja2 import StrictUndefined
 from flask import Flask, jsonify, render_template, redirect, request, flash, session
-from flask_debugtoolbar import DebugToolbarExtension
+# from flask_debugtoolbar import DebugToolbarExtension
 from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
 import praw, datetime, os, nltk
 import operator
@@ -15,7 +15,7 @@ app = Flask(__name__)
 
 # Required to use Flask sessions and the debug toolbar
 app.secret_key = "ABC"
-app.debug = True
+# app.debug = True
 
 # Normally, if you use an undefined variable in Jinja2, it fails silently.
 # This is horrible. Fix this so that, instead, it raises an error.
@@ -356,7 +356,7 @@ def user_detail(user_id):
 @app.route("/beauty_type/<int:beauty_type_id>")
 def beauty_type_results(beauty_type_id):
     """Shows results of profile form, the Beauty Type assigned to the user. Linked from user.html (after they fill out profile form)"""
-    """Includes a list of Product Categories sorted by the Beauty Type passed."""
+    """Includes a list of Product Categories filtered by the Beauty Type passed."""
 
     user_id = session.get("user_id")
     user = User.query.get(user_id)
@@ -366,8 +366,8 @@ def beauty_type_results(beauty_type_id):
     return render_template("beauty_type.html", product_categories=product_categories, beauty_type=beauty_type, user=user)
 
 
-@app.route("/product_list/<int:beauty_type_id>/<int:product_category_id>")
-def product_list(beauty_type_id, product_category_id):
+@app.route("/product_categories/<int:beauty_type_id>/<int:product_category_id>")
+def pproduct_categories(beauty_type_id, product_category_id):
     """Show list of real life Products, filtered by the Beauty Type & Product Category passed. Linked from beauty_type.html."""
 
     beauty_type = Beauty_Type.query.get(beauty_type_id)
@@ -447,30 +447,30 @@ def rate_product(product_id):
 # def get_top_reddit():
 #     """Search asian beauty subreddit for products"""
 
-#     # connect to reddit api
-#     # user_agent = "glowbb"
-#     # r = praw.Reddit(user_agent=user_agent)
-#     # submissions = r.get_subreddit('asianbeauty').get_hot(limit=10)
-#     # get top 10 submissions in asianbeauty subreddit
-#     # for result in submissions:
-#     # for submissions in r.get_subreddit('asianbeauty').get_hot(limit=10):
-
-#     # get_content('http://www.reddit.com/r/AsianBeauty/', params=keyword, limit=25, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
-#     # query = 'url:title'
-#     # search(query, subreddit='asianbeauty', sort=None, syntax=None, period=year, *args, **kwargs)
-
+#     connect to reddit api
 #     user_agent = "glowbb"
 #     r = praw.Reddit(user_agent=user_agent)
-#     query = 'url:title'
-#     submissions = r.search(query=query, subreddit='asianbeauty', sort='hot', period='month', limit=100)
-#     posts = []
-#     for submission in submissions:
-#         post_obj = {
-#             'title': submissions.title,
-#             'url': submissions.url
-#         }
-#         posts.append(post_obj)
-#     # return jsonify({'posts': posts})
+#     submissions = r.get_subreddit('asianbeauty').get_hot(limit=10)
+#     get top 10 submissions in asianbeauty subreddit
+#     for result in submissions:
+#     for submissions in r.get_subreddit('asianbeauty').get_hot(limit=10):
+
+    # get_content('http://www.reddit.com/r/AsianBeauty/', params=keyword, limit=25, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
+    # query = 'url:title'
+    # search(query, subreddit='asianbeauty', sort=None, syntax=None, period=year, *args, **kwargs)
+
+    # user_agent = "glowbb"
+    # r = praw.Reddit(user_agent=user_agent)
+    # query = 'url:title'
+    # submissions = r.search(query=query, subreddit='asianbeauty', sort='hot', period='month', limit=100)
+    # posts = []
+    # for submission in submissions:
+    #     post_obj = {
+    #         'title': submissions.title,
+    #         'url': submissions.url
+    #     }
+    #     posts.append(post_obj)
+    # return jsonify({'posts': posts})
 
 #     return render_template('reddit.html', r=r, submissions=submissions, posts=posts, query=query)
 
@@ -543,7 +543,7 @@ def add_product_process():
     beauty_type = request.form.get("beauty_type")
 
     concern_id = request.form.get("concern")
-    print '\n\n\n%s\n\n\n\n'%concern_id
+    print '\n\n\n%s\n\n\n\n' % concern_id
 
     new_product = Product(
         product_brand=product_brand,
@@ -580,14 +580,21 @@ def search_form():
     return render_template("search.html", results=results, q=q)
 
 
+@app.route('/routine')
+def plan_routine():
+    """Plan Your Routine"""
+
+    return render_template('routine.html')
+
+
 if __name__ == "__main__":
     # We have to set debug=True here, since it has to be True at the point
     # that we invoke the DebugToolbarExtension
-    app.debug = True
+    # app.debug = True
 
     connect_to_db(app)
 
     # Use the DebugToolbar
-    DebugToolbarExtension(app)
+    # DebugToolbarExtension(app)
 
     app.run()

@@ -4,13 +4,41 @@
 
   <title>GlowBB</title>
 
-<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-<!-- link the css I'm about to make right here -->
+  <link rel="stylesheet"
+          href="https://maxcdn.bootstrapcdn.com/bootswatch/3.3.4/cosmo/bootstrap.min.css"/>
+          <!-- link the css below -->
+    <link rel="stylesheet" href="/static/css/style.css"/>
+
 
 </head>
 
 <body>
-<div class="container-fluid">
+<div class="navbar navbar-inverse navbar-static-top">
+    <div class="container">
+
+        <div class="navbar-header">
+            <img src="/static/img/Snail_White.png">
+            <a class="navbar-brand" href="/">GlowBB</a>
+        </div>
+
+        <div class="navbar-collapse collapse">
+            <ul class="nav navbar-nav navbar-right">
+                <li><a href="/login">Log In</a></li>
+                <li><a href="/register">Create An Account</a></li>
+                <li><a href="/profile">Get Your Beauty Type</a></li>
+                <li><a href="/routine">Plan Your Routine</a></li>
+                <li><a href="/search">Find A Product</a></li>
+                <li><a href="/add_product">Add A Product
+                        <img class="/add_product"
+                             src="/static/img/Snail_White.png"></a>
+                </li>
+            </ul>
+        </div>
+
+    </div>
+</div>
+
+<div class="container">
 
   GlowBB
 
@@ -29,4 +57,7 @@
   {% block content %} put your content here {% endblock %}
 </div>
 </body>
+<footer>
+    <p>Copyright GlowBB 2015. All rights reserved.</p>
+</footer>
 </html>

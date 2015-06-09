@@ -1,10 +1,10 @@
 {% extends 'base.html' %}
 {% block content %}
 
-<h2>Beauty Type Details</h2>
+<h3>Your Beauty Type Results</h3>
 
-<p>You are a {{ beauty_type.beauty_type_name }}!</p>
-<p>According to your profile, your skin type is {{ user.skin_type }} and you have the following skin care concerns:</p>
+<p>You are a <b><em>{{ beauty_type.beauty_type_name }}</em></b>. {{ beauty_type.description }}</p>
+<p>According to how you answered your profile, your skin type is {{ user.skin_type }} and you have the following skin care concerns:</p>
 <ul>
   {% if "user_id" in session %}
       {% if user.concerns %}
@@ -14,28 +14,19 @@
       {% endif %}
   {% endif %}
 </ul>
+<p>Check out the product categories below and read about what each is for.</p> 
+<p>Click the link for each product category to find out what real life products are personally recommended for you.</p>
 
-
-
-<h3>What does that mean?</h3><br>
-<p>Paragraph about the beauty type indicated and the types of products best used for it.</p>
-<h3>General Tips</h3><br>
-    <ul>
-        <li>Tip 1</li>
-        <li>Tip 2</li>
-        <li>Tip 3</li>
-        <li>Tip 4</li>
-        <li>Tip 5</li>
-    </ul><br>
-
+  <h4>The Product Categories & What They Each Do:</h4>
   <ol>
     {% for product_category in product_categories %}
        <li>
-        <a href = "/product_list/{{ beauty_type.beauty_type_id }}/{{ product_category.product_category_id }}"> {{ product_category.product_category_name }} </a>
+        <a href = "/product_categories/{{ beauty_type.beauty_type_id }}/{{ product_category.product_category_id }}"> {{ product_category.product_category_name }}: </a>{{ product_category.description }}<br><br>
       </li>
     {% endfor %}
         </ol>
 
+  <h4><a href = "/routine">Plan Your Routine</a></h4><br>
   <h4><a href = "/">Return to Homepage</a></h4>
 
 {% endblock %}
