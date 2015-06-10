@@ -14,8 +14,16 @@
     <p>This product is recommended for:
     <ul>
         <li>Beauty Type: {{ product.beauty_type.beauty_type_name }}</li>
-    </ul><br>
-    <p>It has an average user rating of: {{ average }}</p>
+        <li>Average product rating: {{ average }}/5</li>
+    {% if "user_id" in session %}
+        {% if user_rating %}
+        <li><b>Your</b> product rating: {{ user_rating.score }}/5</li> 
+        <li><b>Your</b> product review: <em>{{ user_rating.comment }}</em></li>
+        {% endif %}
+    {% endif %}
+
+    </ul>
+<br>
 
         <h2>Ratings</h2>
     </ul>
@@ -42,21 +50,19 @@
     <div class="form-group">
         <input type="submit" value="Submit" class="btn btn-danger">
     </div>
-</form>
+</form><br>
 
-    {% if "user_id" in session %}
-        {% if user_rating %}
-        <ul><li>You currently rate this product with a score of {{ user_rating.score }} and had this to say: {{ user_rating.comment }}.</li>
-        {% endif %}
-    {% endif %}
-<br>
+
+<h4><b>Product Reviews</b></h4>
+    
     {% if product.ratings %}
         <ul>
         {% for rating in product.ratings %}
             <li>
-                <a href="/users/{{ rating.user_id }}">{{ rating.user.firstname }}</a> gave this product score of: {{ rating.score }} and said: {{ rating.comment }}
+                <b>{{ rating.user.firstname }}</b> gave this product a {{ rating.score }}/5 and said <em>{{ rating.comment }}</em>
             </li>
         {% endfor %}
+    </ul>
     {% endif %}
 
 <h4><a href = "/">Return to Homepage</a></h4>

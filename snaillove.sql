@@ -1,13 +1,13 @@
-DELETE FROM concerns;
-INSERT INTO concerns VALUES
-(NULL, "Acne"),
-(NULL, "Aging"),
-(NULL, "Clogged"),
-(NULL, "Dryness"),
-(NULL, "Dullness"),
-(NULL, "Irritated"),
-(NULL, "Oiliness"),
-(NULL, "Scars");
+DELETE FROM users;
+INSERT INTO users VALUES
+(NULL, "jessica@gmail.com", "mypass", "Jessica", "Simpson", "90210", 1, "Oily", "Oily"),
+(NULL, "britney@gmail.com", "mypass", "Britney", "Spears", "90210", 1, "Oily", "Oily");
+
+
+DELETE FROM ratings;
+INSERT INTO ratings VALUES
+(NULL, 1, 1, 5, "I love this stuff. Helps with everything!"),
+(NULL, 1, 2, 1, "I hate this stuff. Makes everything worse!");
 
 DELETE FROM beauty_types;
 INSERT INTO beauty_types VALUES
@@ -29,23 +29,71 @@ INSERT INTO product_categories VALUES
 (NULL, "Mask", "Known as the “gateway drug” when it comes to Asian beauty products. Good masks can show noticeable results (for example brightening) after just one use. However these results usually don’t last longer than 24-48 hours. There are several different types, the most common are Sheet masks, thin, treatment-soaked pieces of cloth (usually cotton) cut to fit your face. Hydrogel masks are very similar, but are made of a thin gel, cut in the shape of your face. Hydrogel masks lock in moisture much better than cotton, so they usually provide better results and are more expensive. Clay and other wash off masks are a thick, gooey consistency. Apply to clean dry face and rinse off when the clay has dried. Clay masks are especially are good for oily or acne prone skin. Sleeping masks or packs are the final step in the evening skin care routine (optional). Usually for extra hydration. Should be rinsed off in the morning."),
 (NULL, "Sunscreen", "Korean, and especially Japanese sunscreens in general are far superior to those bought in Europe, and especially the U.S. Asian sunscreens protect skin better from both UVA and UVB rays, and are more “cosmetically elegant”. They are far less likely leave a white cast, are much less greasy, feel better on the skin, look better under makeup, and just look better in general than their U.S. counterparts. There are multiple ingredients used in Asian sunscreens that have not been approved by the FDA. Japan and Korea takes their sun damage prevention very seriously. It should be noted that the #1 best way to prevent wrinkles, spots, and other signs of aging is by using sunscreen every single day, on any portion of your skin that will be exposed. How much should you use? A rather controversial topic in the skin care world, for a long time it was believed that you should apply at least 1/4 teaspoon to your face, plus more for your neck, arms, and any other exposed areas. However more recently it has been made clear that the 1/4 teaspoon measurement (which is actually quite a lot for just your face) was based on a study in which the test subjects were all men with face sizes in the 90th percentile (men with faces larger than most). So it’s likely many people need less. Each application is for 2 hours of time spent outdoors. So if you are only outside during the day on your way to & from work and on your lunch break, and that adds up to less than 2 hours, than a single application of (good) sunscreen, 20 minutes before you leave the house in the morning should be sufficient.");
 
+DELETE FROM concerns;
+INSERT INTO concerns VALUES
+(NULL, "Acne"),
+(NULL, "Aging"),
+(NULL, "Clogged"),
+(NULL, "Dryness"),
+(NULL, "Dullness"),
+(NULL, "Irritated"),
+(NULL, "Oiliness"),
+(NULL, "Scars");
+
 DELETE FROM products;
 INSERT INTO products VALUES
 (NULL, "LeeJiHam", "Tea Tree 90 Essence", 40, "An age-old remedy for a spectrum of skin conditions including acne and eczema, tea tree oil reduces redness, soothes, and rejuvinates the skin. Formulated with 90% natural tea tree extract, you can feel its power of revitalization as Tea Tree 90 Essence alleviates uneven skin tone, minimizes redness, refreshes the skin, and improves overall complexion. With over 800x more Vitamin C than an apple, your skin will thank you for the invigorating treatment that leaves it rejuvinated and radiant.", 1, 4, 1),
 (NULL, "Skinfood", "Peach Sake Pore Serum", 15, "Description: Rich in Vitamins A, C and Silica Powder derived from rice sake and peach extract, this product is a multi-functional item. Not only does this serum moisture the skin but also helps prevent sebum production while simultaneously minimizing the appearance of pores.", 1, 4, 7),
 (NULL, "Banila Co.", "Clean It Zero", 15, "Heralded as one of Allure Magazine's (Korea) Editor's Picks, this award-winning hypoallergenic cleansing cream has finally hit our stores. This unique product applies as a solid balm and then transforms into a silky oil on the skin as you massage the product on your skin. Dissolving the most stubborn makeup and removing any impurities from your skin while keeping your skin's essential oils in tact. Formulated with various Extracts and Vitamins like Papaya Extract and Vitamin C, your skin will feel clean, smooth, and radiant.", 4, 1, 5),
-(NULL, "Leaders", "Teatree Relaxing Renewal Mask", 2, "This soothing tea tree sheet mask is infused with organic leaf extracts (birch, hazelnut and olive) that helps control oily, irritated skin and reduces the appearance of unbalanced skin. Its natural extracts repairs damage on the skin and helps exfoliate, purify and soften the complexion giving the skin a radiant glow.", 2, 7, 1),
+(NULL, "Leaders Insolution", "Tea Tree Relaxing Renewal Mask", 2, "This soothing tea tree sheet mask is infused with organic leaf extracts (birch, hazelnut and olive) that helps control oily, irritated skin and reduces the appearance of unbalanced skin. Its natural extracts repairs damage on the skin and helps exfoliate, purify and soften the complexion giving the skin a radiant glow.", 2, 7, 1),
 (NULL, "Missha", "Time Revolution The First Treatment Essence", 50, "Heralded as a miracle water, the First Treatment Essence is a powerful skin experience. The 80% yeast concentrate energizes your skin cells with regenerative properties. First Treatment Essence replenishes elasticity, revives skin tone, and reveals softened, soothed skin. Signs of aging will be rebuffed and the old will be replaced by the new - bringing you closer to a flawless complexion. This essence hydrates, restores, rejuvenates, and gives you a glowing complexion. This product contains Niacinamide, a Vitamin B3 component, to improve skin elasticity, enhance skin barrier function, and revive skin tone and texture. DN-Aid, made from Cassia-Alata Extract, provides vitality to aging skin, protects DNA from aging caused by UV rays, and promotes restoration of damaged DNA.", 2, 3, 2),
-(NULL, "Elizavecca", "Milky Piggy Carbonated Bubble Clay Mask", 9, "This bubble clay mask is both a deep-cleansing makeup remover and pore cleanser in one! With its special formulation of charcoal powder, it deeply penetrates the pores to thoroughly get rid of deep-seated dirt while supplying proper nutrients to keep the skin healthy and supple. It not only cleanses, refines and tightens pores but it also helps control excessive sebum which usually causes the pores to be clogged.", 2, 7, 3);
+(NULL, "Elizavecca", "Milky Piggy Carbonated Bubble Clay Mask", 9, "This bubble clay mask is both a deep-cleansing makeup remover and pore cleanser in one! With its special formulation of charcoal powder, it deeply penetrates the pores to thoroughly get rid of deep-seated dirt while supplying proper nutrients to keep the skin healthy and supple. It not only cleanses, refines and tightens pores but it also helps control excessive sebum which usually causes the pores to be clogged.", 2, 7, 3),
+(NULL, "Cosrx", "Galactomyces 95 White Power Essence", 16, "Brightens and evens out skin tone", 3, 4, 5),
+(NULL, "Benton", "Snail Bee High Content Essence", 12, "Lightweight gel-like liquid great for combating oily, acne-prone skin. Non-greasy and absorbs quickly to allow for the next step in your skincare routine. Brightens and tones the skin.", 1, 4, 1),
+(NULL, "The Face Shop", "Rice Water Bright Cleansing Light Oil", 17, "This oil cleanser can be used to remove makeup and excess oil without stripping your skin. Gentle enough to remove eye makeup and removes makeup and sunscreen well. Really great for oily and combo skin ", 1, 1, 4),
+(NULL, "Tosowoong", "Monster Cocoon Pack", 28, "A 15 minute, wash-off type mask that is supposed to tighten pores, and leave skin feeling very soft. Contains Silkworm Cocoon, Volcanic Ash, Synake, and Peptides.", 1, 7, 3),
+(NULL, "Mizon", "Multi Function Formula Snail Recovery Gel", 5, "This light moisturizer has snail filtrate, known to accelerate healing. The consistency is true to its name, and goes on smoothly.", 1, 5, 8),
+(NULL, "Nature Republic", "Bee Venom Foam Cleanser", 12, "This foam cleanser contains bee venom which helps with acne", 1, 2, 1),
+(NULL, "Innisfree", "Eco Safety No Sebum Sunblock SPF35 PA++", 15, "This physical sunscreen contains no alcohol and is good for sensitive and/or oily skin. Leaves a slight white cast.", 1, 8, 6),
+(NULL, "Biore", "UV Perfect Bright Milk", 12, "This sunscreen is SPF50+ PA++++ and will suit oily skin types because of its incredibly matte finish which lasts for at least half a day.", 1, 8, 7),
+(NULL, "Innisfree", "The Green Tea Seed Serum", 26, "This serum includes green tea extract and moisturises and hydrates the skin and works for all skin types.", 2, 4, 4),
+(NULL, "Sidmool", " Secret of Red Astxanthin Concentrate", 20, " This is an ampule featuring Astaxanthin. It is supposed to have skin clearing and nourishing properties. ", 2, 4, 5),
+(NULL, "Skinfood", "Black Sugar Wash Off Mask", 12, "Moisturizing sugar scrub that aims to exfoliate but also replenish skin with ingredients like shea butter. Also, it smells delicious.", 2, 6, 4),
+(NULL, "Leaders Insolution", "Aquaringer Skin Clinic Mask", 3, "Ingredients like sugar maple, chamomile, portulaca, peptides, seaweed,  and other plant extracts make this mask phenomenal for both hydrating and anti-aging ", 2, 7, 2),
+(NULL, "A'Pieu", "Nonco Tea Tree Emulsion", 6, "Light moisturizer that smells nicely of tea tree oil, and helps calm down irritated or troubled skin.", 2, 5, 6),
+(NULL, "Cosrx", "Aloe Vera Oil-Free Moisture Cream", 16, "Very light moisturizer high on humectants, great for combination & oily skin.", 2, 5, 6),
+(NULL, "The Saem", "Chaga Anti-Aging Emulsion", 25, " This is a light moisturizer that contains fermented ingredients. They help with better absorption into skin.  It features mushroom extract, macadamia oil, niacinamide, and other plant extracts. The Chaga mushroom has been scientifically linked with cell repair.", 2, 5, 2),
+(NULL, "Missha", " Time Revolution Perfect Youth Cream", 45, " This is a relatively heavy moisturizer that helps with aging issues. It refines skin and is very moisturizing.", 2, 5, 2),
+(NULL, "Skinfood", "Wildberry Milk Cleansing Foam", 9, "Provides ample nutrient to your skin while relax stressed, tired skin by powerful anti-oxidant agent, lively wild berry extract. Smooth milk extract helps to remove keratin and dead skin cells, restoring your skin luster and glow. Its soft texture can easily develop into rich smooth lather, thoroughly removes dirt and excessive oil, leaving the skin soft and supple.", 2, 1, 1),
+(NULL, "Hada Labo", "Foaming Cleanser", 10, "This foaming cleanser is gentle and leaves your skin feeling clean and hydrated.  More suitable for oily to combination skin but can be used for all skin types.", 2, 1, 7),
+(NULL, "Innisfree", "Eco Safety No Sebum Sun Milk SPF 50", 17, "This physical sunscreen gives a light weight application. It contains titanium dioxide and zinc and it's free of parabens.", 2, 8, 2),
+(NULL, "Cosrx", "Natural BHA Skin Returning A-Sol", 16, "Natural BHA Skin Returning A-Sol is a skin-type solution product that solves
+the daunting problem of complex skin trouble with a combination of
+Propolis, AHA, natural BHA, and natural  moisture-retention ingredients, 
+as well as helping with control of sebum and clearing of dead skin cells.", 2, 2, 4),
+(NULL, "Naruko", "Taiwan Magnolia Brightening and Firming Toner EX", 16, "Brightening hydrating toner with high niacinamide content and many botanical extracts. Viscous texture, herbal natural fragrance, good at fading scars over time.", 2, 2, 8),
+(NULL, "Mizon", "All In One Snail Repair Cream", 20, "This essence booster in cream form helps tie essences to your skin and to absorb them faster, while having a large (92%) of snail secretion filtrate to help your skin with acne, redness, wounds scars, tone, texture and some light moisture.", 2, 2, 1),
+(NULL, "Chosungah 22", "Jasmine Essence", 25, " This essence is similar to a toner. It is very liquid and intended to go on as the first step after cleansing. It has fermented ingredients and flower petals floating in it.  Wonderfully refreshing.", 2, 2, 4),
+(NULL, "Whamisa", "Organic Flowers Toner (Original)", 30, "This late toner contains multiple fermented flower extra extracts such as aloe, chrysanthemum, Camelia, cucumber,  licorice root extract rice extract and other wonderful ingredients.", 2, 2, 2),
+(NULL, "Innisfree", "Soybean Energy Essence Light", 32, "This includes 94% fermented soy bean extract and arbutin.", 2, 2, 4),
+(NULL, "Secret Key", "Dragon Bloody Essence", 15, "Brightening essence with dragon's blood extract, niacinimide and adenosine.", 3, 4, 7),
+(NULL, "Mizon", "Snail Repair Intensive Ampoule", 20, "This ampoule gives elasticity and firmness to skin while protecting it from the environment and various skin issues.", 3, 4, 7),
+(NULL, "A'Pieu", "Clean Up Herb Source Cleansing Balm", 10, "Mineral oil based cleansing balm with a light scent and lots of plant extracts. Emulsifies well, suitable for anyone not sensitive to mineral oil!", 3, 1, 3),
+(NULL, "Sulwhasoo", "Sulwhasoo Gentle Cleansing Oil", 38, "Great oil cleanser which diesnt leave an extremely filmy residue. Smells pleasant & not at all synthetic, or artificial ", 3, 1, 3),
+(NULL, "Sulwhasoo", "Sulwhasoo Gentle Cleansing Foam", 36, "Cleansing Foam which isn't too drying.", 3, 1, 3),
+(NULL, "Skinfood", "Black Sugar Cleansing Oil", 9, "A mineral-oil based oil cleanser that's suitable for all skin types. Is strongly frangranced, so avoid if sensitive to fragrance in products.", 3, 1, 3),
+(NULL, "Mizon", "Goodnight White Sleeping Mask", 6, "A lightweight sleeping mask that helps to brighten skin.", 3, 7, 5),
+(NULL, "Innisfree", "Real Squeeze Strawberry Sheet Mask", 2, "Pleasant smelling cotton sheet mask which leave the face felling soft and supple.", 3, 7, 4),
+(NULL, "My Scheming", "Bird's Nest Collagen", 2, "Sheet mask great for adding hydration to skin. Light scent. Package contains a lot of essence that can be used saved to additional applications.", 3, 7, 4),
+(NULL, "Laneige", "Sleeping Pack EX", 40, "This moisturizer is great for hydrating skin over night.", 3, 5, 4),
+(NULL, "Shiseido", "Senka Aging Care UV Sunscreen SPF50+ PA++++", 11, "SENKA Mineral Water UV Essence is an anti-aging Japanese sunscreen gel made with mineral water from Mount Fuji.
+The sunscreen features a newly developed, mineral water based agar gel formula that applies and feels like a beauty serum on the skin.
+It contains PA++++ UVA protection to protect against dark spots, loss of firmness, and other sun damage. It also uses a blend of Coenzyme Q10 and hyaluronic acid to keep skin hydrated.", 3, 8, 2),
+(NULL, "Innisfree", "Eco Safety Aqua Daily Sun Gel", 12, "An SPF 50+, PA+++ gel-type chemical sunscreen.", 3, 8, 2),
+(NULL, "Sulwhasoo", "First Care Activating Serum Ex", 84, "Replenishes essential moisture and nutrients", 3, 2, 2),
+(NULL, "Missha", "Time Revolution Clear Toner", 25, "A pH-balancing AHA and BHA toner, with saccharomyces ferment.", 3, 2, 3),
+(NULL, "Sulwhasoo", "Sulwhasoo Essentusl Balancing Water", 58, "A gel textured toner that prepares your skin for deep hydration.", 3, 2, 5),
+(NULL, "The Face Shop", "Green Tea Oil Free Toner", 17, "Light toner adds moisture to skin after cleansing. Preps skin for additional essences or creams.", 3, 2, 7);
 
 
-DELETE FROM users;
-INSERT INTO users VALUES
-(NULL, "jessica@gmail.com", "mypass", "Jessica", "Simpson", "90210", 1, "Oily", "Oily"),
-(NULL, "britney@gmail.com", "mypass", "Britney", "Spears", "90210", 1, "Oily", "Oily");
 
-
-DELETE FROM ratings;
-INSERT INTO ratings VALUES
-(NULL, 1, 1, 5, "I love this stuff. Helps with everything!"),
-(NULL, 1, 2, 1, "I hate this stuff. Makes everything worse!");
