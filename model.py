@@ -115,6 +115,7 @@ class Product(db.Model):
     product_name = db.Column(db.String(64), nullable=True)
     price = db.Column(db.Integer)
     description = db.Column(db.String(1000), nullable=True)
+    picture = db.Column(db.String(1000), nullable=True)
     beauty_type_id = db.Column(db.Integer, db.ForeignKey('beauty_types.beauty_type_id'))
     product_category_id = db.Column(db.Integer, db.ForeignKey('product_categories.product_category_id'))
     concern_id = db.Column(db.Integer, db.ForeignKey('concerns.concern_id'))

@@ -367,7 +367,7 @@ def beauty_type_results(beauty_type_id):
 
 
 @app.route("/product_categories/<int:beauty_type_id>/<int:product_category_id>")
-def pproduct_categories(beauty_type_id, product_category_id):
+def product_categories(beauty_type_id, product_category_id):
     """Show list of real life Products, filtered by the Beauty Type & Product Category passed. Linked from beauty_type.html."""
 
     beauty_type = Beauty_Type.query.get(beauty_type_id)
@@ -441,6 +441,16 @@ def rate_product(product_id):
     db.session.commit()
 
     return redirect("/product/%s" % product_id)
+
+
+@app.route("/all_products")
+def all_products(product_id):
+    """Show list of all products in the DB sorted by Product Category"""
+
+    # beauty_type = Beauty_Type.query.get(beauty_type_id)
+    # product = Product.query.get(product_id)
+    products = Product.query.filter_by(product_id).all()
+    return render_template("all_products.html", products=products, product_id=product_id)
 
 
 # @app.route("/reddit", methods=['GET'])
@@ -563,7 +573,7 @@ def add_product_process():
     session["product_id"] = new_product.product_id
 
     flash("Your product submission has been received. Thank you!")
-    return redirect("/product_list/%s/%s" % (beauty_type, product_category))
+    return redirect("/product_categories/%s/%s" % (beauty_type, product_category))
 
 
 @app.route('/search', methods=['GET'])
