@@ -1,13 +1,34 @@
 DELETE FROM users;
 INSERT INTO users VALUES
 (NULL, "jessica@gmail.com", "mypass", "Jessica", "Simpson", "90210", 1, "Oily", "Oily"),
-(NULL, "britney@gmail.com", "mypass", "Britney", "Spears", "90210", 1, "Oily", "Oily");
+(NULL, "britney@gmail.com", "mypass", "Britney", "Spears", "90210", 1, "Oily", "Oily"),
+(NULL, "katy@gmail.com", "mypass", "Katy", "Perry", "90210", 1, "Oily", "Oily"),
+(NULL, "alicia@gmail.com", "mypass", "Alicia", "Keys", "90210", 1, "Oily", "Oily"),
+(NULL, "miley@gmail.com", "mypass", "Miley", "Cyrus", "90210", 2, "Combination", "Combination"),
+(NULL, "nicole@gmail.com", "mypass", "Nicole", "Rinn", "94596", 2, "Combination", "Combination"),
+(NULL, "bruno@gmail.com", "mypass", "Bruno", "Mars", "90210", 2, "Combination", "Combination"),
+(NULL, "taylor@gmail.com", "mypass", "Taylor", "Swift", "90210", 3, "Normal", "Normal"),
+(NULL, "pharrell@gmail.com", "mypass", "Pharrell", "Williams", "90210", 3, "Normal", "Normal"),
+(NULL, "gwen@gmail.com", "mypass", "Gwen", "Stefani", "90210", 4, "Dry", "Dry"),
+(NULL, "jenni@gmail.com", "mypass", "Jennifer", "Lopez", "90210", 4, "Dry", "Dry"),
+(NULL, "madge@gmail.com", "mypass", "Madonna", "NULL", "90210", 5, "Dehydrated", "Dehydrated");
 
 
 DELETE FROM ratings;
 INSERT INTO ratings VALUES
 (NULL, 1, 1, 5, "I love this stuff. Helps with everything!"),
-(NULL, 1, 2, 1, "I hate this stuff. Makes everything worse!");
+(NULL, 14, 1, 3, "It did not make my skin any worse, but I didn't think it was as great as everyone else seems to think. I'll keep trying till I run out but I don't know if I will re-buy."),
+(NULL, 2, 2, 1, "I hate this stuff. Makes everything worse!"),
+(NULL, 3, 3, 8, "While it's yet to reach HG status, this cleanser helps the dryness around my mouth and doesn't cause any breakouts."),
+(NULL, 4, 7, 5, "Leaders insolution masks are among the best. This mask is very hydrating and has many of the right ingredients for anti-aging concerns "),
+(NULL, 5, 11, 3, "Leaves a film on the skin that only dissipates after 5-10 minutes of sitting. Not a very sophisticated formula. Smells amazing though!"),
+(NULL, 6, 21, 4, "Was a bit wary of it at first due to heavy fragrance from natural ingredients, but has proven over time to be very brightening, hydrating, and soothing. Will keep repurchasing unless I find something better."),
+(NULL, 7, 17, 5, "I think Mizon AIO is an excellent product. It's light, feels confortable and gives visible results in a short time. On me, it has helped my acne, faded and healed scars and aidedd in overall look of my skin. "),
+(NULL, 8, 23, 2, "I was surprised, but I did nit like it much. Doesn't live up to the hype."),
+(NULL, 9, 23, 5, "The best, most luxurious feeling cleanser I have ever used. Love the real fermented rose petals and the ease of taking it with me."),
+(NULL, 10, 23, 4, "Pretty nice cleanser but I think you can get others just as good for a cheaper price. Not sure if I will buy again."),
+(NULL, 11, 9, 1, "Really dissapointed in this product. Everyone raved about it so much, and it did absolutely nothing for me :("),
+(NULL, 12, 9, 5, "This is the most effective non prescription product I have ever used for my acne, and it has almost completely cleared up my skin.");
 
 DELETE FROM beauty_types;
 INSERT INTO beauty_types VALUES
@@ -64,8 +85,10 @@ INSERT INTO products VALUES
 (NULL, "A'pieu", "Clean Up Herb Source Cleansing Balm", 10, "Mineral oil based cleansing balm with a light scent and lots of plant extracts. Emulsifies well, suitable for anyone not sensitive to mineral oil.", "http://static.w2beauty.com/41315-thickbox_default/clean-up-herb-source-cleansing-balm.jpg", 1, 1, 3),
 (NULL, "Hada Labo", "Gokujun Hyaluronic Lotion Smooth Light", 16, "This light lotion has hyaluronic acid and is great on acne-prone and/or sensitive skin types. No fragrance and short list of ingredients.", "http://image.xtremcare.com/cache/data/productimage/41XFYAzXkzL-500x500.jpg", 1, 3, 5),
 (NULL, "Mizon", "AHA & BHA Daily Clean Toner", 18, "A gentle toner and exfoliant all in one that helps balance the PH levels of your skin. AHAs work to gently exfoliate dead skin cells while BHA helps unclog pores, leaving your complexion smoother, clearer and more even-toned. Ideal for all types.", "http://cdn.shopify.com/s/files/1/0791/2083/products/Mizon_AHABHA.jpeg?v=1429144817", 1, 6, 1),
-(NULL, "Su:m37", "Miracle Rose Cleansing Stick", 23, "The good: An advanced cleanser with a delicate lather that will melt away daily impurities naturally. Contains fermented damask rose extract and more than 90% natural ingredients, eliminating dryness without leaving any residue behind. Free from artificial colors, parabens, and synthetic preservatives. Recommended for all skin types.", "http://cdn.shopify.com/s/files/1/0249/1218/products/miracle-cleansing-stick_21398691-69ab-46bd-80ec-e9b383aa6626.png?v=1426863211", 2, 2, 4);
-
+(NULL, "Su:m37", "Miracle Rose Cleansing Stick", 23, "The good: An advanced cleanser with a delicate lather that will melt away daily impurities naturally. Contains fermented damask rose extract and more than 90% natural ingredients, eliminating dryness without leaving any residue behind. Free from artificial colors, parabens, and synthetic preservatives. Recommended for all skin types.", "http://cdn.shopify.com/s/files/1/0249/1218/products/miracle-cleansing-stick_21398691-69ab-46bd-80ec-e9b383aa6626.png?v=1426863211", 2, 1, 4),
+(NULL, "Softymo", "Deep Cleansing Oil", 10, "An oil cleanser that washes off all makeup. Gentle enough for all skin types as a first step cleanser.", "http://static.weloveshopping.com/shop/BerryLoFt/KOSE-JP-DPCLO23.jpg", 2, 1, 6),
+(NULL, "Innisfree", "The Green Tea Seed Serum", 26, "This serum includes green tea extract and moisturises and hydrates the skin and works for all skin types.", "http://myphamhanquochcm.com/kcfinder/upload/images/45848(1).jpg", 2, 4, 3),
+(NULL, "Biore", "UV Aqua Rich Watery Essence SPF50+ PA++++", 15, "Suitable for face and body application, the long-lasting sunscreen provides SPF50+ PA+++ protection and is enriched with Hyaluronic Acid as well as Citrus extract to keep skin hydrated for longer.", "http://www.herworldplus.com/sites/default/files/biore%201.JPG", 2, 8, 2);
 
 
 
