@@ -1,0 +1,121 @@
+.navbar-inverse {
+  background-color: #BF9039;
+  border-color: BLACK;
+}
+
+div.navbar-header img {
+    width: 30px;
+    float: left;
+    margin-top: 7px;
+    margin-right: 7px;
+}
+
+
+
+ul.nav img {
+    height: 15px;
+}
+
+.warning {
+    color: red;
+}
+
+/* login */
+
+div.login_form img {
+    width: 15em;
+}
+
+/* register */
+
+div.register_form img {
+    width: 15em;
+}
+
+
+/* profile */
+
+div.profile_form img {
+    width: 15em;
+}
+
+.warning {
+    color: #7b8e26;
+}
+
+/* routine */
+
+div.routine img {
+    width: 15em;
+}
+
+/* search */
+
+div.search img {
+    width: 15em;
+}
+
+a:hover{ color: #7b8e26;
+}
+
+div.add_product .price {
+    margin: 0.5em 0;
+    font-size: 150%;
+    font-weight: bold;
+
+.form-control {
+  display: block;
+  width: 100%;
+  height: 43px;
+  padding: 10px 18px;
+  font-size: 15px;
+  line-height: 1.42857143;
+  color: #333333;
+  background-color: #ffffff;
+  background-image: none;
+  border: 1px solid #cccccc;
+  border-radius: 0;
+  -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+  -webkit-transition: border-color ease-in-out .15s,-webkit-box-shadow ease-in-out .15s;
+  -o-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+  transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+}
+input, button, select, textarea {
+  font-family: inherit;
+  font-size: inherit;
+  line-height: inherit;
+}
+
+
+/* login_form.html */
+
+.form-signin {
+  max-width: 330px;
+  margin: 5em auto 0 auto;  /* TRBL */
+}
+
+/* form submit buttom colors */
+
+.btn-danger {
+  color: #ffffff;
+  background-color: #7b8e26;
+  border-color: #7b8e26;
+}
+
+/* form text */
+
+label {
+  display: inline-block;
+  max-width: 100%;
+  margin-bottom: 5px;
+  font-weight: normal;
+}
+
+/* form input field background color */
+
+input:-webkit-autofill, textarea:-webkit-autofill, select:-webkit-autofill {
+  background-color: rgb(255, 255, 255);
+  background-image: none;
+  color: rgb(0, 0, 0);
+}
