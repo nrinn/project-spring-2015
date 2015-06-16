@@ -400,7 +400,7 @@ def product_detail(product_id):
     rating_scores = [r.score for r in product.ratings]
 
     if len(rating_scores) > 0:
-        avg_rating = float(sum(rating_scores)) / len(rating_scores)
+        avg_rating = int(sum(rating_scores)) / len(rating_scores)
     else:
         avg_rating = 0
 
@@ -441,90 +441,6 @@ def rate_product(product_id):
     db.session.commit()
 
     return redirect("/product/%s" % product_id)
-
-
-@app.route("/all_products")
-def all_products(product_id):
-    """Show list of all products in the DB sorted by Product Category"""
-
-    # beauty_type = Beauty_Type.query.get(beauty_type_id)
-    # product = Product.query.get(product_id)
-    products = Product.query.filter_by(product_id).all()
-    return render_template("all_products.html", products=products, product_id=product_id)
-
-
-# @app.route("/reddit", methods=['GET'])
-# def get_top_reddit():
-#     """Search asian beauty subreddit for products"""
-
-#     connect to reddit api
-#     user_agent = "glowbb"
-#     r = praw.Reddit(user_agent=user_agent)
-#     submissions = r.get_subreddit('asianbeauty').get_hot(limit=10)
-#     get top 10 submissions in asianbeauty subreddit
-#     for result in submissions:
-#     for submissions in r.get_subreddit('asianbeauty').get_hot(limit=10):
-
-    # get_content('http://www.reddit.com/r/AsianBeauty/', params=keyword, limit=25, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
-    # query = 'url:title'
-    # search(query, subreddit='asianbeauty', sort=None, syntax=None, period=year, *args, **kwargs)
-
-    # user_agent = "glowbb"
-    # r = praw.Reddit(user_agent=user_agent)
-    # query = 'url:title'
-    # submissions = r.search(query=query, subreddit='asianbeauty', sort='hot', period='month', limit=100)
-    # posts = []
-    # for submission in submissions:
-    #     post_obj = {
-    #         'title': submissions.title,
-    #         'url': submissions.url
-    #     }
-    #     posts.append(post_obj)
-    # return jsonify({'posts': posts})
-
-#     return render_template('reddit.html', r=r, submissions=submissions, posts=posts, query=query)
-
-# CLIENT_ID = 'YOUR_CLIENT_ID'
-# CLIENT_SECRET = 'YOUR CLIENT SECRET'
-# REDIRECT_URI = 'http://127.0.0.1:65010/authorize_callback'
-
-# print "\n\n\n%s\n\n\n" % r
-# print "\n\n\n%s\n\n\n" % submissions
-
-# @app.route('/')
-# def homepage():
-#     link_no_refresh = r.get_authorize_url('UniqueKey')
-#     link_refresh = r.get_authorize_url('DifferentUniqueKey',
-#                                        refreshable=True)
-#     link_no_refresh = "<a href=%s>link</a>" % link_no_refresh
-#     link_refresh = "<a href=%s>link</a>" % link_refresh
-#     text = "First link. Not refreshable %s</br></br>" % link_no_refresh
-#     text += "Second link. Refreshable %s</br></br>" % link_refresh
-#     return text
-
-# @app.route('/authorize_callback')
-# def authorized():
-#     state = request.args.get('state', '')
-#     code = request.args.get('code', '')
-#     info = r.get_access_information(code)
-#     user = r.get_me()
-#     variables_text = "State=%s, code=%s, info=%s." % (state, code,
-#                                                       str(info))
-#     text = 'You are %s and have %u link karma.' % (user.name,
-#                                                    user.link_karma)
-#     back_link = "<a href='/'>Try again</a>"
-#     return variables_text + '</br></br>' + text + '</br></br>' + back_link
-
-
-    # if submissions:
-    #     results = Product.query.filter(or_(Product.description.ilike('%{}%'.format(submissions)), Product.product_name.ilike('%{}%'.format(submissions)), Product.product_brand.ilike('%{}%'.format(submissions)))).all()
-
-    # else:
-    #     results = None
-
-
-# class praw.__init__.Reddit(*args, **kwargs)
-#     get_content(url, params=None, limit=10, place_holder=None, root_field='data', thing_field='children', after_field='after', _use_oauth=False, object_filter=None)
 
 
 @app.route('/add_product', methods=['GET'])

@@ -16,8 +16,6 @@ INSERT INTO users VALUES
 
 DELETE FROM ratings;
 INSERT INTO ratings VALUES
-(NULL, 1, 1, 5, "I love this stuff. Helps with everything!"),
-(NULL, 14, 1, 3, "It did not make my skin any worse, but I didn't think it was as great as everyone else seems to think. I'll keep trying till I run out but I don't know if I will re-buy."),
 (NULL, 2, 2, 1, "I hate this stuff. Makes everything worse!"),
 (NULL, 3, 3, 8, "While it's yet to reach HG status, this cleanser helps the dryness around my mouth and doesn't cause any breakouts."),
 (NULL, 4, 7, 5, "Leaders insolution masks are among the best. This mask is very hydrating and has many of the right ingredients for anti-aging concerns "),
