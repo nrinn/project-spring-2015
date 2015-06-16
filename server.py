@@ -151,147 +151,59 @@ def profile_process():
         2: 0,  # snail/combination
         3: 0,  # bee/normal
         4: 0,  # butterfly/dry
-        5: 0, }  # dragonfly/dehydrated
+        }
 
-    """STARFISH 1"""
     if skin_type and skin_condition == "Oily":
         beauty_types[1] += 50
-
-    if acne == "true":
-        beauty_types[1] += 0
-
-    if aging == "true":
-        beauty_types[1] += 0
-
-    if clogged == "true":
-        beauty_types[1] += 0
-
-    if dryness == "true":
-        beauty_types[1] += 0
-
-    if dullness == "true":
-        beauty_types[1] += 0
-
-    if irritated == "true":
-        beauty_types[1] += 0
-
-    if oiliness == "true":
-        beauty_types[1] += 0
-
-    if scars == "true":
-        beauty_types[1] += 0
-
-    """SNAIL 2"""
     if skin_type and skin_condition == "Combination":
         beauty_types[2] += 50
-
-    if acne == "true":
-        beauty_types[2] += 0
-
-    if aging == "true":
-        beauty_types[2] += 0
-
-    if clogged == "true":
-        beauty_types[2] += 0
-
-    if dryness == "true":
-        beauty_types[2] += 0
-
-    if dullness == "true":
-        beauty_types[2] += 0
-
-    if irritated == "true":
-        beauty_types[2] += 0
-
-    if oiliness == "true":
-        beauty_types[2] += 0
-
-    if scars == "true":
-        beauty_types[2] += 0
-
-    """BEE 3"""
     if skin_type and skin_condition == "Normal":
         beauty_types[3] += 50
-
-    if acne == "true":
-        beauty_types[3] += 0
-
-    if aging == "true":
-        beauty_types[3] += 0
-
-    if clogged == "true":
-        beauty_types[3] += 0
-
-    if dryness == "true":
-        beauty_types[3] += 0
-
-    if dullness == "true":
-        beauty_types[3] += 0
-
-    if irritated == "true":
-        beauty_types[3] += 0
-
-    if oiliness == "true":
-        beauty_types[3] += 0
-
-    if scars == "true":
-        beauty_types[3] += 0
-
-    """BUTTERFLY 4"""
     if skin_type and skin_condition == "Dry":
         beauty_types[4] += 50
 
+
     if acne == "true":
+        beauty_types[1] += 10
+        beauty_types[2] += 5
+        beauty_types[3] += 1
         beauty_types[4] += 0
 
     if aging == "true":
-        beauty_types[4] += 0
+        beauty_types[1] += 0
+        beauty_types[2] += 0
+        beauty_types[3] += 5
+        beauty_types[4] += 5
 
     if clogged == "true":
-        beauty_types[4] += 0
+        beauty_types[1] += 10
+        beauty_types[2] += 5
+        beauty_types[3] += 2
+        beauty_types[4] += -5
 
     if dryness == "true":
-        beauty_types[4] += 0
+        beauty_types[1] += -10
+        beauty_types[2] += 2
+        beauty_types[3] += 5
+        beauty_types[4] += 10
 
     if dullness == "true":
-        beauty_types[4] += 0
+        beauty_types[1] += -5
+        beauty_types[2] += 0
+        beauty_types[3] += 2
+        beauty_types[4] += 5
 
     if irritated == "true":
-        beauty_types[4] += 0
+        beauty_types[1] += 0
+        beauty_types[2] += 3
+        beauty_types[3] += 0
+        beauty_types[4] += 10
 
     if oiliness == "true":
-        beauty_types[4] += 0
-
-    if scars == "true":
-        beauty_types[4] += 0
-
-    """DRAGONFLY 5"""
-    if skin_type and skin_condition == "Dehydrated":
-        beauty_types[5] += 50
-
-    if acne == "true":
-        beauty_types[5] += 0
-
-    if aging == "true":
-        beauty_types[5] += 0
-
-    if clogged == "true":
-        beauty_types[5] += 0
-
-    if dryness == "true":
-        beauty_types[5] += 0
-
-    if dullness == "true":
-        beauty_types[5] += 0
-
-    if irritated == "true":
-        beauty_types[5] += 0
-
-    if oiliness == "true":
-        beauty_types[5] += 0
-
-    if scars == "true":
-        beauty_types[5] += 0
+        beauty_types[1] += 10
+        beauty_types[2] += 2
+        beauty_types[3] += 0
+        beauty_types[4] += -10
 
     print beauty_types
 
