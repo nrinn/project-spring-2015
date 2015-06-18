@@ -151,6 +151,7 @@ def profile_process():
         2: 0,  # snail/combination
         3: 0,  # bee/normal
         4: 0,  # butterfly/dry
+        5: 0,  # dragonfly/dehydrated
         }
 
     if skin_type and skin_condition == "Oily":
@@ -161,49 +162,57 @@ def profile_process():
         beauty_types[3] += 50
     if skin_type and skin_condition == "Dry":
         beauty_types[4] += 50
-
+    if skin_type and skin_condition == "Dehydrated":
+        beauty_types[5] += 50
 
     if acne == "true":
         beauty_types[1] += 10
         beauty_types[2] += 5
         beauty_types[3] += 1
         beauty_types[4] += 0
+        beauty_types[5] += 4
 
     if aging == "true":
         beauty_types[1] += 0
-        beauty_types[2] += 0
+        beauty_types[2] += -2
         beauty_types[3] += 5
         beauty_types[4] += 5
+        beauty_types[5] += 0
 
     if clogged == "true":
         beauty_types[1] += 10
         beauty_types[2] += 5
         beauty_types[3] += 2
         beauty_types[4] += -5
+        beauty_types[5] += 2
 
     if dryness == "true":
         beauty_types[1] += -10
         beauty_types[2] += 2
         beauty_types[3] += 5
         beauty_types[4] += 10
+        beauty_types[5] += 1
 
     if dullness == "true":
         beauty_types[1] += -5
         beauty_types[2] += 0
         beauty_types[3] += 2
         beauty_types[4] += 5
+        beauty_types[5] += 2
 
     if irritated == "true":
         beauty_types[1] += 0
         beauty_types[2] += 3
         beauty_types[3] += 0
         beauty_types[4] += 10
+        beauty_types[5] += 4
 
     if oiliness == "true":
         beauty_types[1] += 10
         beauty_types[2] += 2
         beauty_types[3] += 0
         beauty_types[4] += -10
+        beauty_types[5] += 2
 
     print beauty_types
 
