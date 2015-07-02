@@ -1,8 +1,5 @@
-# project-spring-2015
-
 GlowBB
 ============
-Please note: optimized algorithm to calculate beauty type to be added ASAP.
 
 GlowBB is a web application created by Nicole Rinn for her final project at Hackbright Academy, Spring 2015, Cohort X. It is intended to be used as a tool for skin care product consumers. Namely those interested in purchasing products from Asia. The South Korean skin care market has seen huge growth in the past several years and is currently a $10 billion dollar + industry. Within the past few years major U.S. retailers like Sephora, Urban Outfitters, and Target have each picked up multiple South Korean skin care brands.
 
