@@ -1,12 +1,10 @@
 """GlowBB"""
 
 from jinja2 import StrictUndefined
-from flask import Flask, jsonify, render_template, redirect, request, flash, session
+from flask import Flask, render_template, redirect, request, flash, session
 # from flask_debugtoolbar import DebugToolbarExtension
-from model import connect_to_db, db, User, User_Concern, Concern, Beauty_Type, Product_Category, Product, Rating
-import praw, datetime, os, nltk
+from model import connect_to_db, db, User, User_Concern, Beauty_Type, Product_Category, Product, Rating
 import operator
-from operator import itemgetter
 from sqlalchemy import or_
 # from lib.helpers import hash
 # import json
@@ -53,7 +51,7 @@ def register_process():
     db.session.add(new_user)
     db.session.commit()
 
-    #browser/cookie storing session
+    # browser/cookie storing session
     session["user_id"] = new_user.user_id
 
     flash("User %s added." % email)
@@ -129,11 +127,11 @@ def profile_process():
     user = User.query.get(user_id)
 
     # Gets profile form variables and adds them to user_id.
-    #Q1 & 2: Gets user's skin type (both radio)
+    # Q1 & 2: Gets user's skin type (both radio)
     skin_type = request.form.get("skin_type")
     skin_condition = request.form.get("skin_condition")
 
-    #Q3: Allows user to select up to 3 skin "concerns" from list (checkbox)
+    # Q3: Allows user to select up to 3 skin "concerns" from list (checkbox)
     acne = request.form.get("acne")
     aging = request.form.get("aging")
     clogged = request.form.get("clogged")
@@ -143,16 +141,16 @@ def profile_process():
     oiliness = request.form.get("oiliness")
     scars = request.form.get("scars")
 
-#Dictionary of all beauty types w/values of 0. Values are incremented depending
-#on how profile form questions are answered. Dictonary sorted backwards by value.
-#Beauty type/key with highest value is assigned to user as their beauty type.
+# Dictionary of all beauty types w/values of 0. Values are incremented depending
+# on how profile form questions are answered. Dictonary sorted backwards by value.
+# Beauty type/key with highest value is assigned to user as their beauty type.
     beauty_types = {
         1: 0,  # starfish/oily
         2: 0,  # snail/combination
         3: 0,  # bee/normal
         4: 0,  # butterfly/dry
         5: 0,  # dragonfly/dehydrated
-        }
+    }
 
     if skin_type and skin_condition == "Oily":
         beauty_types[1] += 50
@@ -276,15 +274,21 @@ def user_detail(user_id):
 
 @app.route("/beauty_type/<int:beauty_type_id>")
 def beauty_type_results(beauty_type_id):
-    """Shows results of profile form, the Beauty Type assigned to the user. Linked from user.html (after they fill out profile form)"""
-    """Includes a list of Product Categories filtered by the Beauty Type passed."""
+    """Shows results of profile form, the Beauty Type assigned to the user.
+    Linked from user.html (after they fill out profile form)
+    Includes a list of Product Categories filtered by the Beauty Type passed."""
 
     user_id = session.get("user_id")
     user = User.query.get(user_id)
     beauty_type = Beauty_Type.query.get(beauty_type_id)
     product_categories = Product_Category.query.order_by(Product_Category.product_category_id).all()
 
-    return render_template("beauty_type.html", product_categories=product_categories, beauty_type=beauty_type, user=user)
+    return render_template(
+        "beauty_type.html", 
+        product_categories=product_categories, 
+        beauty_type=beauty_type, 
+        user=user,
+    )
 
 
 @app.route("/product_categories/<int:beauty_type_id>/<int:product_category_id>")
