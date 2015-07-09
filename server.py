@@ -284,22 +284,29 @@ def beauty_type_results(beauty_type_id):
     product_categories = Product_Category.query.order_by(Product_Category.product_category_id).all()
 
     return render_template(
-        "beauty_type.html", 
-        product_categories=product_categories, 
-        beauty_type=beauty_type, 
+        "beauty_type.html",
+        product_categories=product_categories,
+        beauty_type=beauty_type,
         user=user,
     )
 
 
 @app.route("/product_categories/<int:beauty_type_id>/<int:product_category_id>")
 def product_categories(beauty_type_id, product_category_id):
-    """Show list of real life Products, filtered by the Beauty Type & Product Category passed. Linked from beauty_type.html."""
+    """Show list of real life Products, filtered by the Beauty Type & Product
+    Category passed. Linked from beauty_type.html."""
 
     beauty_type = Beauty_Type.query.get(beauty_type_id)
     print beauty_type.products
     product_category = Product_Category.query.get(product_category_id)
-    products = Product.query.filter_by(beauty_type_id=beauty_type_id, product_category_id=product_category_id).all()
-    return render_template("product_categories.html", beauty_type=beauty_type, product_category=product_category, products=products)
+    products = Product.query.filter_by(beauty_type_id=beauty_type_id,
+                                       product_category_id=product_category_id).all()
+    return render_template(
+        "product_categories.html",
+        beauty_type=beauty_type,
+        product_category=product_category,
+        products=products,
+    )
 
 
 @app.route("/product/<int:product_id>", methods=['GET'])
@@ -310,8 +317,8 @@ def product_detail(product_id):
     product = Product.query.get(product_id)
     # today = datetime.date.today()
 
-    #Get the user's product rating & comment if they have already rated it.
-    #Else, don't show a rating & comment.
+    # Get the user's product rating & comment if they have already rated it.
+    # Else, don't show a rating & comment.
 
     if user_id:
         user_rating = Rating.query.filter_by(
@@ -404,7 +411,7 @@ def add_product_process():
         product_category_id=product_category,
         beauty_type_id=beauty_type,
         concern_id=concern_id
-        )
+    )
 
     # Adds the new product to the database. Session of connection to DB.
     db.session.add(new_product)
@@ -423,7 +430,9 @@ def search_form():
 
     q = request.args.get('q', '')
     if q:
-        results = Product.query.filter(or_(Product.description.ilike('%{}%'.format(q)), Product.product_name.ilike('%{}%'.format(q)), Product.product_brand.ilike('%{}%'.format(q)))).all()
+        results = Product.query.filter(or_(Product.description.ilike('%{}%'.format(q)),
+                                           Product.product_name.ilike('%{}%'.format(q)),
+                                           Product.product_brand.ilike('%{}%'.format(q)))).all()
 
     else:
         results = None
